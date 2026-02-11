@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager's Dashboard</title>
+  <style>
+    /* Add your styles here */
+  </style>
+</head>
+<section id="procurement">
+  <h2>Record Procurement</h2>
+  <form id="procurement-form">
+    <label for="produce-name">Produce Name:</label>
+    <input type="text" id="produce-name" name="produce-name" required>
+    <label for="produce-type">Produce Type:</label>
+    <input type="text" id="produce-type" name="produce-type" required>
+    <label for="date-time">Date/Time:</label>
+    <input type="datetime-local" id="date-time" name="date-time" required>
+    <label for="tonnage">Tonnage:</label>
+    <input type="number" id="tonnage" name="tonnage" required>
+    <label for="cost">Cost:</label>
+    <input type="number" id="cost" name="cost" required>
+    <label for="dealer-name">Dealer Name:</label>
+    <input type="text" id="dealer-name" name="dealer-name" required>
+    <label for="branch">Branch:</label>
+    <select id="branch" name="branch" required>
+      <option value="branch1">Branch 1</option>
+      <option value="branch2">Branch 2</option>
+    </select>
+    <label for="contact">Contact:</label>
+    <input type="text" id="contact" name="contact" required>
+    <label for="sale-price">Sale Price:</label>
+    <input type="number" id="sale-price" name="sale-price" required>
+    <button type="submit">Record Procurement</button>
+  </form>
+</section>
+
+<section id="sales">
+  <h2>Record Sales</h2>
+  <form id="sales-form">
+    <label for="produce-name-sales">Produce Name:</label>
+    <select id="produce-name-sales" name="produce-name-sales" required>
+      <!-- produce options will be populated here -->
+    </select>
+    <label for="tonnage-sales">Tonnage:</label>
+    <input type="number" id="tonnage-sales" name="tonnage-sales" required>
+    <label for="amount-paid">Amount Paid:</label>
+    <input type="number" id="amount-paid" name="amount-paid" required>
+    <label for="buyer-name">Buyer Name:</label>
+    <input type="text" id="buyer-name" name="buyer-name" required>
+    <label for="sales-agent-name">Sales Agent Name:</label>
+    <input type="text" id="sales-agent-name" name="sales-agent-name" required>
+    <button type="submit">Record Sales</button>
+  </form>
+</section>
+
+<section id="reports">
+  <h2>View Reports</h2>
+  <form id="reports-form">
+    <label for="report-type">Report Type:</label>
+    <select id="report-type" name="report-type" required>
+      <option value="sales-report">Sales Report</option>
+      <option value="stock-report">Stock Report</option>
+    </select>
+    <label for="branch-report">Branch:</label>
+    <select id="branch-report" name="branch-report" required>
+      <option value="branch1">Branch 1</option>
+      <option value="branch2">Branch 2</option>
+    </select>
+    <button type="submit">View Report</button>
+  </form>
+</section>
+
+<body>
+  <!-- Add your HTML code here -->
+  <script>
+    // Add your JavaScript code here to make API calls to the backend
+    fetch('/procurement')
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+  </script>
+</body>
+</html>

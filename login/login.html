@@ -9,56 +9,169 @@
     body {
       margin: 0;
       padding: 0;
-      background-image: url('your-photo.jpg'); /* upload your photo */
-      background-size: cover;
-      background-position: center;
-      height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .form-box {
-      width: 300px;
+      width: 350px;
       background: white;
-      padding: 20px;
+      padding: 30px;
       border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .form-box h2 {
       text-align: center;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
     }
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.4);
     }
     button {
       width: 100%;
-      padding: 10px;
-      background: teal;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-top: 15px;
+      transition: transform 0.2s;
     }
     button:hover {
-      background: #0097a7;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
     }
-    a {
+    .link-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .link-container p {
+      margin: 0;
+      color: #666;
+    }
+    .link-container a {
       text-decoration: none;
-      color: teal;
+      color: #667eea;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    .link-container a:hover {
+      color: #764ba2;
+    }
+    .error {
+      color: #d32f2f;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      color: #667eea;
     }
   </style>
 </head>
 <body>
   <div class="form-box">
-    <h2>LOGIN NOW</h2>
-    <form action="/api/login" method="POST">
-      <input id="email" type="email" name="username" placeholder="enter your email" required>
-      <input id="password" type="password" name="password" placeholder="enter your password" required>
+    <h2>LOGIN</h2>
+    <form id="loginForm">
+      <input 
+        id="email" 
+        type="email" 
+        name="email" 
+        placeholder="Enter your email" 
+        required
+      >
+      <input 
+        id="password" 
+        type="password" 
+        name="password" 
+        placeholder="Enter your password" 
+        required
+      >
+      <div class="error" id="errorMessage"></div>
+      <div class="loading" id="loading">Logging in...</div>
       <button type="submit">Login Now</button>
     </form>
-    <p>don't have an account? <a href="register.html">register now</a></p>
+    <div class="link-container">
+      <p>Don't have an account? <a href="/register">Register now</a></p>
+    </div>
   </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const loading = document.getElementById('loading');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      loading.style.display = 'block';
+      errorMessage.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        loading.style.display = 'none';
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
+
+        // Store token in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userName', data.name);
+
+        // Redirect based on role
+        const roleRoutes = {
+          'manager': '/manager-dashboard',
+          'admin': '/admin-dashboard',
+          'procurement': '/procurement-dashboard',
+          'agent': '/agent-dashboard'
+        };
+
+        const redirectUrl = roleRoutes[data.role] || '/manager-dashboard';
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 500);
+
+      } catch (error) {
+        loading.style.display = 'none';
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = error.message;
+      }
+    });
+  </script>
 </body>
 </html>

@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* Container styles */
@@ -22,39 +22,83 @@
     /* Navbar styles */
     .navbar {
       width: 20%;
-      background-color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
     }
 
     .navbar .logo {
       font-weight: bold;
       font-size: 1.5rem;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     .navbar .logo span {
-      color: green;
+      color: #90caf9;
+    }
+
+    .navbar .user-info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
     }
 
     .navbar .nav-links {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
+      flex-grow: 1;
     }
 
     .navbar .nav-links a {
       text-decoration: none;
       color: white;
-      font-size: 0.9rem;
+      font-size: 1rem;
       cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .navbar .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .navbar .nav-links a.active {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: auto;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #b71c1c;
     }
 
     /* Dashboard container styles */
     .dashboard-container {
       width: 80%;
-      padding: 20px;
-      text-align: center;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .dashboard-container h1 {
+      color: #333;
+      margin-bottom: 20px;
     }
 
     /* Stats grid styles */
@@ -62,71 +106,167 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
-      margin-top: 20px;
+      margin-bottom: 40px;
     }
 
     .stat-card {
       border: 1px solid #ddd;
       padding: 20px;
+      border-radius: 8px;
+      background: #f5f5f5;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .stat-card h2 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 10px;
+      color: #667eea;
     }
 
     .stat-card p {
       color: #666;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     .stat-card button {
-      background: green;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
       padding: 10px;
       width: 100%;
       cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.2s;
     }
 
-    /* Responsive design for smaller screens */
-    @media (max-width: 768px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
+    .stat-card button:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Section styles */
+    .section {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
     }
 
     /* Form styles */
     form {
-      text-align: left;
-      margin-top: 20px;
+      display: grid;
+      gap: 15px;
     }
 
     label {
-      display: block;
-      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
     }
 
     input, select {
-      width: 100%;
       padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.2);
     }
 
     button[type="submit"] {
-      background: green;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      padding: 10px;
-      width: 100%;
+      padding: 12px;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: transform 0.2s;
     }
 
-    /* Blur effect */
-    .blur {
-      filter: blur(5px);
-      pointer-events: none;
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table thead {
+      background: #667eea;
+      color: white;
+    }
+
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    table tbody tr:hover {
+      background: #f5f5f5;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .navbar {
+        width: 100%;
+        flex-direction: row;
+      }
+
+      .dashboard-container {
+        width: 100%;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar .nav-links {
+        flex-direction: row;
+        gap: 10px;
+        flex-grow: 0;
+      }
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .success {
+      background: #c8e6c9;
+      color: #2e7d32;
+      border: 1px solid #2e7d32;
+    }
+
+    .error {
+      background: #ffcdd2;
+      color: #d32f2f;
+      border: 1px solid #d32f2f;
     }
   </style>
 </head>
@@ -135,146 +275,356 @@
     <!-- Navbar -->
     <div class="navbar">
       <div class="logo">Manager<span>Dashboard</span></div>
-      <div class="nav-links">
-        <a onclick="showSection('procurement')">Procurement</a>
-        <a onclick="showSection('stock')">Stock</a>
-        <a onclick="showSection('sales')">Sales</a>
-        <a onclick="showSection('reports')">Reports</a>
+      <div class="user-info" id="userInfo">
+        <div>👤 <span id="userName">Loading...</span></div>
+        <div style="font-size: 0.8rem; margin-top: 5px;" id="userRole">Role: Manager</div>
       </div>
-      <div class="user-icon"> 👤 </div>
+      <div class="nav-links">
+        <a onclick="showSection('dashboard')">📊 Dashboard</a>
+        <a onclick="showSection('procurement')">📦 Procurement</a>
+        <a onclick="showSection('stock')">📂 Stock</a>
+        <a onclick="showSection('sales')">💰 Sales</a>
+        <a onclick="showSection('reports')">📋 Reports</a>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
     <!-- Dashboard container -->
     <div class="dashboard-container">
-      <h1>DASHBOARD</h1>
-      <div class="stats-grid">
-        <!-- Stat cards -->
-        <div class="stat-card">
-          <h2>100</h2>
-          <p>Total Stock</p>
-          <button onclick="alert('Showing stock')">See Stock</button>
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section active">
+        <h1>DASHBOARD</h1>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h2 id="totalStock">0</h2>
+            <p>Total Stock</p>
+            <button onclick="showSection('stock')">View Stock</button>
+          </div>
+          <div class="stat-card">
+            <h2 id="salesToday">0</h2>
+            <p>Sales Today</p>
+            <button onclick="showSection('sales')">View Sales</button>
+          </div>
+          <div class="stat-card">
+            <h2 id="procurementPending">0</h2>
+            <p>Procurement Pending</p>
+            <button onclick="showSection('procurement')">View Procurement</button>
+          </div>
+          <div class="stat-card">
+            <h2 id="reportsCount">0</h2>
+            <p>Reports Generated</p>
+            <button onclick="showSection('reports')">View Reports</button>
+          </div>
         </div>
-        <div class="stat-card">
-          <h2>50</h2>
-          <p>Sales Today</p>
-          <button onclick="alert('Showing sales')">See Sales</button>
-        </div>
-        <div class="stat-card">
-          <h2>20</h2>
-          <p>Procurement Pending</p>
-          <button onclick="alert('Showing procurement')">See Procurement</button>
-        </div>
-        <div class="stat-card">
-          <h2>10</h2>
-          <p>Reports Generated</p>
-          <button onclick="alert">See Reports</button>
-        </div>
-      </div>
+      </section>
+
+      <!-- Procurement Section -->
       <section id="procurement" class="section">
         <h2>Record Procurement</h2>
-        <form>
-          <label for="produce-name">Produce Name:</label>
-          <input type="text" id="produce-name" name="produce-name" required>
-          <label for="produce-type">Produce Type:</label>
-          <input type="text" id="produce-type" name="produce-type" required>
-          <label for="date-time">Date/Time:</label>
-          <input type="datetime-local" id="date-time" name="date-time" required>
-          <label for="tonnage">Tonnage:</label>
-          <input type="number" id="tonnage" name="tonnage" required>
-          <label for="cost">Cost:</label>
-          <input type="number" id="cost" name="cost" required>
-          <label for="dealer-name">Dealer Name:</label>
-          <input type="text" id="dealer-name" name="dealer-name" required>
-          <label for="branch">Branch:</label>
-          <select id="branch" name="branch" required>
-            <option value="branch1">Branch 1</option>
-            <option value="branch2">Branch 2</option>
-          </select>
-          <label for="contact">Contact:</label>
-          <input type="text" id="contact" name="contact" required>
-          <label for="sale-price">Sale Price:</label>
-          <input type="number" id="sale-price" name="sale-price" required>
+        <div id="procurementMessage"></div>
+        <form id="procurementForm">
+          <div>
+            <label for="produce-name">Produce Name:</label>
+            <input type="text" id="produce-name" required>
+          </div>
+          <div>
+            <label for="produce-type">Produce Type:</label>
+            <input type="text" id="produce-type" required>
+          </div>
+          <div>
+            <label for="tonnage">Tonnage:</label>
+            <input type="number" id="tonnage" required>
+          </div>
+          <div>
+            <label for="cost">Cost:</label>
+            <input type="number" id="cost" required>
+          </div>
+          <div>
+            <label for="dealer-name">Dealer Name:</label>
+            <input type="text" id="dealer-name" required>
+          </div>
+          <div>
+            <label for="branch">Branch:</label>
+            <select id="branch" required>
+              <option value="">Select Branch</option>
+              <option value="branch1">Branch 1</option>
+              <option value="branch2">Branch 2</option>
+            </select>
+          </div>
+          <div>
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" required>
+          </div>
+          <div>
+            <label for="sale-price">Sale Price:</label>
+            <input type="number" id="sale-price" required>
+          </div>
           <button type="submit">Record Procurement</button>
         </form>
       </section>
-      <section id="stock" class="section" style="display: none;">
+
+      <!-- Stock Section -->
+      <section id="stock" class="section">
         <h2>Manage Stock</h2>
         <table>
           <thead>
             <tr>
               <th>Produce Name</th>
+              <th>Type</th>
               <th>Tonnage</th>
-              <th>Action</th>
+              <th>Cost</th>
+              <th>Branch</th>
             </tr>
           </thead>
           <tbody id="stock-table-body">
-            <!-- stock data will be populated here -->
+            <tr>
+              <td colspan="5" style="text-align: center;">Loading stock data...</td>
+            </tr>
           </tbody>
         </table>
       </section>
-      <section id="sales" class="section" style="display: none;">
+
+      <!-- Sales Section -->
+      <section id="sales" class="section">
         <h2>Record Sales</h2>
-        <form>
-          <label for="produce-name-sales">Produce Name:</label>
-          <select id="produce-name-sales" name="produce-name-sales" required>
-            <!-- produce options will be populated here -->
-          </select>
-          <label for="tonnage-sales">Tonnage:</label>
-          <input type="number" id="tonnage-sales" name="tonnage-sales" required>
-          <label for="amount-paid">Amount Paid:</label>
-          <input type="number" id="amount-paid" name="amount-paid" required>
-          <label for="buyer-name">Buyer Name:</label>
-          <input type="text" id="buyer-name" name="buyer-name" required>
-          <label for="sales-agent-name">Sales Agent Name:</label>
-          <input type="text" id="sales-agent-name" name="sales-agent-name" required>
+        <div id="salesMessage"></div>
+        <form id="salesForm">
+          <div>
+            <label for="produce-name-sales">Produce Name:</label>
+            <select id="produce-name-sales" required>
+              <option value="">Select Produce</option>
+            </select>
+          </div>
+          <div>
+            <label for="tonnage-sales">Tonnage:</label>
+            <input type="number" id="tonnage-sales" required>
+          </div>
+          <div>
+            <label for="amount-paid">Amount Paid:</label>
+            <input type="number" id="amount-paid" required>
+          </div>
+          <div>
+            <label for="buyer-name">Buyer Name:</label>
+            <input type="text" id="buyer-name" required>
+          </div>
+          <div>
+            <label for="sales-agent-name">Sales Agent Name:</label>
+            <input type="text" id="sales-agent-name" required>
+          </div>
           <button type="submit">Record Sales</button>
         </form>
       </section>
-      <section id="reports" class="section" style="display: none;">
+
+      <!-- Reports Section -->
+      <section id="reports" class="section">
         <h2>View Reports</h2>
-        <form>
-          <label for="report-type">Report Type:</label>
-          <select id="report-type" name="report-type" required>
-            <option value="sales-report">Sales Report</option>
-            <option value="stock-report">Stock Report</option>
-          </select>
-          <label for="branch-report">Branch:</label>
-          <select id="branch-report" name="branch-report" required>
-            <option value="branch1">Branch 1</option>
-            <option value="branch2">Branch 2</option>
-          </select>
+        <form id="reportsForm">
+          <div>
+            <label for="report-type">Report Type:</label>
+            <select id="report-type" required>
+              <option value="">Select Report Type</option>
+              <option value="sales-report">Sales Report</option>
+              <option value="stock-report">Stock Report</option>
+            </select>
+          </div>
+          <div>
+            <label for="branch-report">Branch:</label>
+            <select id="branch-report" required>
+              <option value="">Select Branch</option>
+              <option value="branch1">Branch 1</option>
+              <option value="branch2">Branch 2</option>
+            </select>
+          </div>
           <button type="submit">View Report</button>
         </form>
       </section>
-      <section id="procurement" class="section">
-  <h2>Record Procurement</h2>
-  <form id="procurement-form">
-    <!-- form fields -->
-  </form>
-</section>
-
-<section id="sales" class="section" style="display: none;">
-  <h2>Record Sales</h2>
-  <form id="sales-form">
-    <!-- form fields -->
-  </form>
-</section>
-
-<section id="reports" class="section" style="display: none;">
-  <h2>View Reports</h2>
-  <form id="reports-form">
-    <!-- form fields -->
-  </form>
-</section>
     </div>
   </div>
 
   <script>
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      // Load user info
+      const userName = localStorage.getItem('userName') || 'User';
+      const userRole = localStorage.getItem('role') || 'Manager';
+      document.getElementById('userName').textContent = userName;
+      document.getElementById('userRole').textContent = `Role: ${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
+
+      // Load data
+      loadStockData();
+      loadProcurementData();
+      
+      // Form event listeners
+      document.getElementById('procurementForm').addEventListener('submit', submitProcurement);
+      document.getElementById('salesForm').addEventListener('submit', submitSales);
+      document.getElementById('reportsForm').addEventListener('submit', submitReports);
+    });
+
     function showSection(sectionId) {
       const sections = document.querySelectorAll('.section');
       sections.forEach(section => {
-        section.style.display = section.id === sectionId ? 'block' : 'none';
+        section.classList.remove('active');
       });
+      document.getElementById(sectionId).classList.add('active');
+
+      // Update navbar active state
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.remove('active');
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userName');
+      window.location.href = '/login';
+    }
+
+    async function loadStockData() {
+      try {
+        const response = await fetch('/api/procurement');
+        const data = await response.json();
+        const tbody = document.getElementById('stock-table-body');
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available</td></tr>';
+          document.getElementById('totalStock').textContent = '0';
+          return;
+        }
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.type}</td>
+            <td>${item.tonnage}</td>
+            <td>$${item.cost}</td>
+            <td>${item.branch}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById('totalStock').textContent = data.length;
+      } catch (error) {
+        console.error('Error loading stock:', error);
+      }
+    }
+
+    async function loadProcurementData() {
+      try {
+        const response = await fetch('/api/procurement');
+        const data = await response.json();
+        document.getElementById('procurementPending').textContent = data.length;
+
+        // Populate produce dropdown for sales
+        const select = document.getElementById('produce-name-sales');
+        select.innerHTML = '<option value="">Select Produce</option>';
+        data.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item._id;
+          option.textContent = item.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading procurement:', error);
+      }
+    }
+
+    async function submitProcurement(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('produce-name').value,
+        type: document.getElementById('produce-type').value,
+        tonnage: document.getElementById('tonnage').value,
+        cost: document.getElementById('cost').value,
+        dealerName: document.getElementById('dealer-name').value,
+        branch: document.getElementById('branch').value,
+        contact: document.getElementById('contact').value,
+        salePrice: document.getElementById('sale-price').value
+      };
+
+      try {
+        const response = await fetch('/api/procurement', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const messageDiv = document.getElementById('procurementMessage');
+        if (response.ok) {
+          messageDiv.innerHTML = '<div class="message success">Procurement recorded successfully!</div>';
+          document.getElementById('procurementForm').reset();
+          loadStockData();
+          loadProcurementData();
+          setTimeout(() => {
+            messageDiv.innerHTML = '';
+          }, 3000);
+        } else {
+          messageDiv.innerHTML = '<div class="message error">Error recording procurement</div>';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('procurementMessage').innerHTML = '<div class="message error">Error submitting form</div>';
+      }
+    }
+
+    async function submitSales(e) {
+      e.preventDefault();
+      
+      const formData = {
+        produceName: document.getElementById('produce-name-sales').value,
+        tonnage: document.getElementById('tonnage-sales').value,
+        amountPaid: document.getElementById('amount-paid').value,
+        buyerName: document.getElementById('buyer-name').value,
+        salesAgentName: document.getElementById('sales-agent-name').value
+      };
+
+      try {
+        const response = await fetch('/api/sales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const messageDiv = document.getElementById('salesMessage');
+        if (response.ok) {
+          messageDiv.innerHTML = '<div class="message success">Sale recorded successfully!</div>';
+          document.getElementById('salesForm').reset();
+          setTimeout(() => {
+            messageDiv.innerHTML = '';
+          }, 3000);
+        } else {
+          messageDiv.innerHTML = '<div class="message error">Error recording sale</div>';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('salesMessage').innerHTML = '<div class="message error">Error submitting form</div>';
+      }
+    }
+
+    async function submitReports(e) {
+      e.preventDefault();
+      
+      const reportType = document.getElementById('report-type').value;
+      const branch = document.getElementById('branch-report').value;
+
+      alert(`Generating ${reportType} for ${branch}`);
+      // Add report generation logic here
     }
   </script>
 </body>

@@ -6,65 +6,153 @@ const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
+// Attempt to load multer for handling file uploads. If it's not installed,
+// fall back to not saving files and continue handling JSON registrations.
+let multer;
+let uploadMiddleware = null;
+try {
+  multer = require('multer');
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads');
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const sanitized = file.originalname.replace(/[^a-zA-Z0-9.\-\_]/g, '_');
+      cb(null, uniqueSuffix + '-' + sanitized);
+    }
+  });
+  const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB
+  uploadMiddleware = upload.single('photo');
+} catch (e) {
+  console.warn('Optional dependency "multer" not found; file upload disabled. Install with: npm install multer');
+}
 // Register endpoint
-router.post('/register', async (req, res) => {
-  try {
-    console.log('Register request received:', { email: req.body.email, role: req.body.role });
-    
-    const { name, email, password, confirmPassword, role } = req.body;
+if (uploadMiddleware) {
+  router.post('/register', uploadMiddleware, async (req, res) => {
+    try {
+      console.log('Register request received (with possible file):', { email: req.body.email, role: req.body.role });
 
-    // Validate required fields
-    if (!name || !email || !password || !confirmPassword || !role) {
-      console.log('Missing required fields');
-      return res.status(400).json({ error: 'All fields are required' });
+      const { name, email, password, confirmPassword, role } = req.body;
+
+      // Validate required fields
+      if (!name || !email || !password || !confirmPassword || !role) {
+        console.log('Missing required fields');
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        console.log('Passwords do not match');
+        return res.status(400).json({ error: 'Passwords do not match' });
+      }
+
+      // Check if user exists
+      const userExists = await User.findOne({ email });
+      if (userExists) {
+        console.log('User already exists:', email);
+        return res.status(400).json({ error: 'Email already registered' });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Build user object
+      const userData = {
+        name,
+        email,
+        password: hashedPassword,
+        role
+      };
+
+      if (req.file) {
+        // Save public-accessible path
+        userData.photo = '/uploads/' + req.file.filename;
+      }
+
+      // Create new user
+      const user = new User(userData);
+      await user.save();
+      console.log('User registered successfully:', email);
+
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      res.status(201).json({
+        message: 'User registered successfully',
+        token,
+        role: user.role,
+        userId: user._id,
+        photo: user.photo
+      });
+    } catch (error) {
+      console.error('Register error:', error);
+      res.status(500).json({ error: error.message });
     }
+  });
+} else {
+  router.post('/register', async (req, res) => {
+    try {
+      console.log('Register request received:', { email: req.body.email, role: req.body.role });
+      
+      const { name, email, password, confirmPassword, role } = req.body;
 
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      console.log('Passwords do not match');
-      return res.status(400).json({ error: 'Passwords do not match' });
+      // Validate required fields
+      if (!name || !email || !password || !confirmPassword || !role) {
+        console.log('Missing required fields');
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        console.log('Passwords do not match');
+        return res.status(400).json({ error: 'Passwords do not match' });
+      }
+
+      // Check if user exists
+      const userExists = await User.findOne({ email });
+      if (userExists) {
+        console.log('User already exists:', email);
+        return res.status(400).json({ error: 'Email already registered' });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create new user (no photo)
+      const user = new User({ 
+        name, 
+        email, 
+        password: hashedPassword, 
+        role 
+      });
+      
+      await user.save();
+      console.log('User registered successfully:', email);
+
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      res.status(201).json({ 
+        message: 'User registered successfully',
+        token,
+        role: user.role,
+        userId: user._id
+      });
+    } catch (error) {
+      console.error('Register error:', error);
+      res.status(500).json({ error: error.message });
     }
-
-    // Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      console.log('User already exists:', email);
-      return res.status(400).json({ error: 'Email already registered' });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    const user = new User({ 
-      name, 
-      email, 
-      password: hashedPassword, 
-      role 
-    });
-    
-    await user.save();
-    console.log('User registered successfully:', email);
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.status(201).json({ 
-      message: 'User registered successfully',
-      token,
-      role: user.role,
-      userId: user._id
-    });
-  } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
+  });
+}
 // Login endpoint
 router.post('/login', async (req, res) => {
   try {

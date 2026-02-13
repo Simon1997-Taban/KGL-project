@@ -3,7 +3,32 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const path = require('path');
 
+// Attempt to load the CORS package; fall back to a simple CORS middleware if not installed.
+let cors;
+try {
+  cors = require('cors');
+} catch (e) {
+  console.warn('Optional dependency "cors" not found; using fallback CORS middleware. Install with: npm install cors');
+  cors = null;
+}
+
 const app = express();
+
+// Enable CORS for local development. In production, configure origin whitelist.
+if (cors) {
+  app.use(cors());
+} else {
+  // Simple permissive CORS for local development. Replace with a stricter policy in production.
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+    next();
+  });
+}
 
 // Middleware - order matters!
 app.use(express.json({ limit: '10mb' }));
@@ -13,6 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Add debug logging for requests
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  // Prevent caching of HTML files
+  if (req.path.endsWith('.html') || req.path === '/login' || req.path === '/register') {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
   next();
 });
 
@@ -176,4 +207,11 @@ app.listen(PORT, () => {
   console.log('  GET  /admin-dashboard         - Admin dashboard');
   console.log('  GET  /procurement-dashboard   - Procurement dashboard');
   console.log('  GET  /agent-dashboard         - Sales Agent dashboard');
+});
+
+// Central error handler to log errors and return JSON responses
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err && err.stack ? err.stack : err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: err && err.message ? err.message : 'Internal Server Error' });
 });

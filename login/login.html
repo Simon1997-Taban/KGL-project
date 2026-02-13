@@ -132,7 +132,7 @@
       errorMessage.style.display = 'none';
 
       try {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -140,11 +140,18 @@
           body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
         loading.style.display = 'none';
 
+        // Handle response
+        let data;
+        try {
+          data = await response.json();
+        } catch (e) {
+          throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+
         if (!response.ok) {
-          throw new Error(data.error || 'Login failed');
+          throw new Error(data.error || `Login failed (${response.status})`);
         }
 
         // Store token in localStorage
@@ -170,6 +177,7 @@
         loading.style.display = 'none';
         errorMessage.style.display = 'block';
         errorMessage.textContent = error.message;
+        console.error('Login error:', error);
       }
     });
   </script>

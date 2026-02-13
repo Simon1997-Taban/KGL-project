@@ -444,57 +444,84 @@
   <script>
     // Check authentication
     document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/login';
-        return;
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/login';
+          return;
+        }
+
+        // Load user info
+        const userName = localStorage.getItem('userName') || 'User';
+        const userRole = localStorage.getItem('role') || 'Manager';
+        document.getElementById('userName').textContent = userName;
+        document.getElementById('userRole').textContent = `Role: ${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
+
+        // Load data - with error handling
+        loadStockData().catch(err => console.error('Stock load error:', err));
+        loadProcurementData().catch(err => console.error('Procurement load error:', err));
+        
+        // Form event listeners
+        const procForm = document.getElementById('procurementForm');
+        const salesForm = document.getElementById('salesForm');
+        const reportForm = document.getElementById('reportsForm');
+        
+        if (procForm) procForm.addEventListener('submit', submitProcurement);
+        if (salesForm) salesForm.addEventListener('submit', submitSales);
+        if (reportForm) reportForm.addEventListener('submit', submitReports);
+      } catch (error) {
+        console.error('Dashboard initialization error:', error);
+        alert('Error loading dashboard. Please refresh the page.');
       }
-
-      // Load user info
-      const userName = localStorage.getItem('userName') || 'User';
-      const userRole = localStorage.getItem('role') || 'Manager';
-      document.getElementById('userName').textContent = userName;
-      document.getElementById('userRole').textContent = `Role: ${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
-
-      // Load data
-      loadStockData();
-      loadProcurementData();
-      
-      // Form event listeners
-      document.getElementById('procurementForm').addEventListener('submit', submitProcurement);
-      document.getElementById('salesForm').addEventListener('submit', submitSales);
-      document.getElementById('reportsForm').addEventListener('submit', submitReports);
     });
 
     function showSection(sectionId) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(sectionId).classList.add('active');
+      try {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+          section.classList.remove('active');
+        });
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.classList.add('active');
+        }
 
-      // Update navbar active state
-      document.querySelectorAll('.nav-links a').forEach(link => {
-        link.classList.remove('active');
-      });
+        // Update navbar active state
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          link.classList.remove('active');
+        });
+      } catch (error) {
+        console.error('Error showing section:', error);
+      }
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      window.location.href = '/login';
+      try {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        window.location.href = '/login';
+      }
     }
 
     async function loadStockData() {
       try {
         const response = await fetch('/api/procurement');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         const tbody = document.getElementById('stock-table-body');
+        
+        if (!tbody) return;
+        
         tbody.innerHTML = '';
 
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
           tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available</td></tr>';
           document.getElementById('totalStock').textContent = '0';
           return;
@@ -503,11 +530,11 @@
         data.forEach(item => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.type}</td>
-            <td>${item.tonnage}</td>
-            <td>$${item.cost}</td>
-            <td>${item.branch}</td>
+            <td>${item.name || 'N/A'}</td>
+            <td>${item.type || 'N/A'}</td>
+            <td>${item.tonnage || '0'}</td>
+            <td>$${item.cost || '0'}</td>
+            <td>${item.branch || 'N/A'}</td>
           `;
           tbody.appendChild(row);
         });
@@ -515,24 +542,39 @@
         document.getElementById('totalStock').textContent = data.length;
       } catch (error) {
         console.error('Error loading stock:', error);
+        const tbody = document.getElementById('stock-table-body');
+        if (tbody) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Error loading stock data</td></tr>';
+        }
       }
     }
 
     async function loadProcurementData() {
       try {
         const response = await fetch('/api/procurement');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
+        
+        if (!Array.isArray(data)) {
+          console.warn('Procurement data is not an array');
+          return;
+        }
+        
         document.getElementById('procurementPending').textContent = data.length;
 
         // Populate produce dropdown for sales
         const select = document.getElementById('produce-name-sales');
-        select.innerHTML = '<option value="">Select Produce</option>';
-        data.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item._id;
-          option.textContent = item.name;
-          select.appendChild(option);
-        });
+        if (select) {
+          select.innerHTML = '<option value="">Select Produce</option>';
+          data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item._id || '';
+            option.textContent = item.name || 'Unknown';
+            select.appendChild(option);
+          });
+        }
       } catch (error) {
         console.error('Error loading procurement:', error);
       }
@@ -541,18 +583,18 @@
     async function submitProcurement(e) {
       e.preventDefault();
       
-      const formData = {
-        name: document.getElementById('produce-name').value,
-        type: document.getElementById('produce-type').value,
-        tonnage: document.getElementById('tonnage').value,
-        cost: document.getElementById('cost').value,
-        dealerName: document.getElementById('dealer-name').value,
-        branch: document.getElementById('branch').value,
-        contact: document.getElementById('contact').value,
-        salePrice: document.getElementById('sale-price').value
-      };
-
       try {
+        const formData = {
+          name: document.getElementById('produce-name').value,
+          type: document.getElementById('produce-type').value,
+          tonnage: document.getElementById('tonnage').value,
+          cost: document.getElementById('cost').value,
+          dealerName: document.getElementById('dealer-name').value,
+          branch: document.getElementById('branch').value,
+          contact: document.getElementById('contact').value,
+          salePrice: document.getElementById('sale-price').value
+        };
+
         const response = await fetch('/api/procurement', {
           method: 'POST',
           headers: {
@@ -566,13 +608,14 @@
         if (response.ok) {
           messageDiv.innerHTML = '<div class="message success">Procurement recorded successfully!</div>';
           document.getElementById('procurementForm').reset();
-          loadStockData();
-          loadProcurementData();
+          loadStockData().catch(err => console.error('Stock reload error:', err));
+          loadProcurementData().catch(err => console.error('Procurement reload error:', err));
           setTimeout(() => {
             messageDiv.innerHTML = '';
           }, 3000);
         } else {
-          messageDiv.innerHTML = '<div class="message error">Error recording procurement</div>';
+          const error = await response.json().catch(() => ({}));
+          messageDiv.innerHTML = `<div class="message error">Error: ${error.error || 'Failed to record procurement'}</div>`;
         }
       } catch (error) {
         console.error('Error:', error);
@@ -583,15 +626,15 @@
     async function submitSales(e) {
       e.preventDefault();
       
-      const formData = {
-        produceName: document.getElementById('produce-name-sales').value,
-        tonnage: document.getElementById('tonnage-sales').value,
-        amountPaid: document.getElementById('amount-paid').value,
-        buyerName: document.getElementById('buyer-name').value,
-        salesAgentName: document.getElementById('sales-agent-name').value
-      };
-
       try {
+        const formData = {
+          produceName: document.getElementById('produce-name-sales').value,
+          tonnage: document.getElementById('tonnage-sales').value,
+          amountPaid: document.getElementById('amount-paid').value,
+          buyerName: document.getElementById('buyer-name').value,
+          salesAgentName: document.getElementById('sales-agent-name').value
+        };
+
         const response = await fetch('/api/sales', {
           method: 'POST',
           headers: {
@@ -609,7 +652,8 @@
             messageDiv.innerHTML = '';
           }, 3000);
         } else {
-          messageDiv.innerHTML = '<div class="message error">Error recording sale</div>';
+          const error = await response.json().catch(() => ({}));
+          messageDiv.innerHTML = `<div class="message error">Error: ${error.error || 'Failed to record sale'}</div>`;
         }
       } catch (error) {
         console.error('Error:', error);
@@ -620,11 +664,16 @@
     async function submitReports(e) {
       e.preventDefault();
       
-      const reportType = document.getElementById('report-type').value;
-      const branch = document.getElementById('branch-report').value;
+      try {
+        const reportType = document.getElementById('report-type').value;
+        const branch = document.getElementById('branch-report').value;
 
-      alert(`Generating ${reportType} for ${branch}`);
-      // Add report generation logic here
+        alert(`Generating ${reportType} for ${branch}`);
+        // Add report generation logic here
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error generating report');
+      }
     }
   </script>
 </body>

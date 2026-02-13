@@ -237,36 +237,59 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/login';
-        return;
-      }
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/login';
+          return;
+        }
 
-      const userName = localStorage.getItem('userName') || 'Officer';
-      document.getElementById('userName').textContent = userName;
+        const userName = localStorage.getItem('userName') || 'Officer';
+        const userElement = document.getElementById('userName');
+        if (userElement) {
+          userElement.textContent = userName;
+        }
+      } catch (error) {
+        console.error('Dashboard initialization error:', error);
+      }
     });
 
     function showSection(sectionId) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(sectionId).classList.add('active');
+      try {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+          section.classList.remove('active');
+        });
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.classList.add('active');
+        }
+      } catch (error) {
+        console.error('Error showing section:', error);
+      }
     }
 
     function submitOrder(event) {
-      event.preventDefault();
-      alert('Purchase order submitted successfully!');
-      event.target.reset();
+      try {
+        event.preventDefault();
+        alert('Purchase order submitted successfully!');
+        event.target.reset();
+      } catch (error) {
+        console.error('Error submitting order:', error);
+      }
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      window.location.href = '/login';
+      try {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        window.location.href = '/login';
+      }
     }
   </script>
 </body>

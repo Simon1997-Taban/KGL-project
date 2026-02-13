@@ -173,26 +173,42 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/login';
-        return;
-      }
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/login';
+          return;
+        }
 
-      const userName = localStorage.getItem('userName') || 'Admin';
-      document.getElementById('userName').textContent = userName;
+        const userName = localStorage.getItem('userName') || 'Admin';
+        const userElement = document.getElementById('userName');
+        if (userElement) {
+          userElement.textContent = userName;
+        }
+      } catch (error) {
+        console.error('Dashboard initialization error:', error);
+      }
     });
 
     function goToSection(section) {
-      alert(`Navigating to ${section} section`);
+      try {
+        alert(`Navigating to ${section} section`);
+      } catch (error) {
+        console.error('Error navigating section:', error);
+      }
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      window.location.href = '/login';
+      try {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        window.location.href = '/login';
+      }
     }
   </script>
 </body>

@@ -197,6 +197,9 @@
     <div class="navbar">
       <div class="logo">Sales<br>Agent</div>
       <div class="user-info">
+        <div id="userPhoto" style="margin-bottom: 10px;">
+          <img id="profileImg" src="" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: none;">
+        </div>
         <div>👤 <span id="userName">Agent</span></div>
         <div style="font-size: 0.8rem; margin-top: 5px;">Role: Sales Agent</div>
       </div>
@@ -293,9 +296,19 @@
         }
 
         const userName = localStorage.getItem('userName') || 'Agent';
+        const userPhoto = localStorage.getItem('userPhoto');
+        
         const userElement = document.getElementById('userName');
         if (userElement) {
           userElement.textContent = userName;
+        }
+        
+        if (userPhoto) {
+          const profileImg = document.getElementById('profileImg');
+          if (profileImg) {
+            profileImg.src = userPhoto;
+            profileImg.style.display = 'block';
+          }
         }
       } catch (error) {
         console.error('Dashboard initialization error:', error);
@@ -333,6 +346,7 @@
         localStorage.removeItem('role');
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
+        localStorage.removeItem('userPhoto');
         window.location.href = '/login';
       } catch (error) {
         console.error('Logout error:', error);

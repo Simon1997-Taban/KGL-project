@@ -87,6 +87,7 @@ if (uploadMiddleware) {
         token,
         role: user.role,
         userId: user._id,
+        name: user.name,
         photo: user.photo
       });
     } catch (error) {
@@ -145,7 +146,8 @@ if (uploadMiddleware) {
         message: 'User registered successfully',
         token,
         role: user.role,
-        userId: user._id
+        userId: user._id,
+        name: user.name
       });
     } catch (error) {
       console.error('Register error:', error);
@@ -187,10 +189,34 @@ router.post('/login', async (req, res) => {
       token,
       role: user.role,
       userId: user._id,
-      name: user.name
+      name: user.name,
+      photo: user.photo
     });
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get user profile endpoint
+router.get('/profile/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      photo: user.photo
+    });
+  } catch (error) {
+    console.error('Profile error:', error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -159,6 +159,9 @@
         localStorage.setItem('role', data.role);
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('userName', data.name);
+        if (data.photo) {
+          localStorage.setItem('userPhoto', data.photo);
+        }
 
         // Redirect based on role
         const roleRoutes = {

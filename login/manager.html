@@ -276,6 +276,9 @@
     <div class="navbar">
       <div class="logo">Manager<span>Dashboard</span></div>
       <div class="user-info" id="userInfo">
+        <div id="userPhoto" style="margin-bottom: 10px;">
+          <img id="profileImg" src="" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: none;">
+        </div>
         <div>👤 <span id="userName">Loading...</span></div>
         <div style="font-size: 0.8rem; margin-top: 5px;" id="userRole">Role: Manager</div>
       </div>
@@ -454,8 +457,19 @@
         // Load user info
         const userName = localStorage.getItem('userName') || 'User';
         const userRole = localStorage.getItem('role') || 'Manager';
+        const userPhoto = localStorage.getItem('userPhoto');
+        
         document.getElementById('userName').textContent = userName;
         document.getElementById('userRole').textContent = `Role: ${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
+        
+        // Load profile photo if available
+        if (userPhoto) {
+          const profileImg = document.getElementById('profileImg');
+          if (profileImg) {
+            profileImg.src = userPhoto;
+            profileImg.style.display = 'block';
+          }
+        }
 
         // Load data - with error handling
         loadStockData().catch(err => console.error('Stock load error:', err));
@@ -501,6 +515,7 @@
         localStorage.removeItem('role');
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
+        localStorage.removeItem('userPhoto');
         window.location.href = '/login';
       } catch (error) {
         console.error('Logout error:', error);

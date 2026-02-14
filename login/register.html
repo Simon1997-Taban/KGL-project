@@ -226,6 +226,10 @@
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
         localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userName', data.name);
+        if (data.photo) {
+          localStorage.setItem('userPhoto', data.photo);
+        }
 
         successMessage.style.display = 'block';
         successMessage.textContent = 'Registration successful! Redirecting...';

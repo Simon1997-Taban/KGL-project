@@ -132,6 +132,8 @@
       errorMessage.style.display = 'none';
 
       try {
+        console.log('Attempting login with email:', email);
+        
         const response = await fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: {
@@ -141,11 +143,14 @@
         });
 
         loading.style.display = 'none';
+        
+        console.log('Login response status:', response.status);
 
         // Handle response
         let data;
         try {
           data = await response.json();
+          console.log('Login response data:', data);
         } catch (e) {
           throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
@@ -153,6 +158,8 @@
         if (!response.ok) {
           throw new Error(data.error || `Login failed (${response.status})`);
         }
+
+        console.log('Login successful, role:', data.role);
 
         // Store token in localStorage
         localStorage.setItem('token', data.token);
@@ -163,18 +170,21 @@
           localStorage.setItem('userPhoto', data.photo);
         }
 
+        console.log('Stored in localStorage - role:', localStorage.getItem('role'));
+
         // Redirect based on role
         const roleRoutes = {
-          'manager': '/manager-dashboard',
-          'admin': '/admin-dashboard',
-          'procurement': '/procurement-dashboard',
-          'agent': '/agent-dashboard'
+          'manager': 'http://localhost:3000/manager-dashboard',
+          'admin': 'http://localhost:3000/admin-dashboard',
+          'procurement': 'http://localhost:3000/procurement-dashboard',
+          'agent': 'http://localhost:3000/agent-dashboard'
         };
 
-        const redirectUrl = roleRoutes[data.role] || '/manager-dashboard';
-        setTimeout(() => {
-          window.location.href = redirectUrl;
-        }, 500);
+        const redirectUrl = roleRoutes[data.role] || 'http://localhost:3000/manager-dashboard';
+        console.log('Redirecting to:', redirectUrl, 'with role:', data.role);
+        
+        // Redirect
+        window.location.href = redirectUrl;
 
       } catch (error) {
         loading.style.display = 'none';

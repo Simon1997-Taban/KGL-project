@@ -291,7 +291,7 @@
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          window.location.href = '/login';
+          window.location.href = 'http://localhost:3000/login';
           return;
         }
 
@@ -347,7 +347,7 @@
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
         localStorage.removeItem('userPhoto');
-        window.location.href = '/login';
+        window.location.href = 'http://localhost:3000/login';
       } catch (error) {
         console.error('Logout error:', error);
         window.location.href = '/login';

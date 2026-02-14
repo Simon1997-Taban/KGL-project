@@ -182,6 +182,8 @@
       loading.style.display = 'block';
 
       try {
+          console.log('Attempting registration with email:', email, 'role:', role);
+          
           // Build FormData for multipart upload
           const formData = new FormData();
           formData.append('name', name);
@@ -200,6 +202,8 @@
           });
 
         loading.style.display = 'none';
+        
+        console.log('Register response status:', response.status);
 
         // Check if response is ok
         if (!response.ok) {
@@ -222,6 +226,9 @@
           throw new Error('Server returned invalid response');
         }
 
+        console.log('Registration successful, response:', data);
+        console.log('Role from response:', data.role);
+
         // Store token in localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
@@ -231,30 +238,37 @@
           localStorage.setItem('userPhoto', data.photo);
         }
 
+        console.log('Stored in localStorage - role:', localStorage.getItem('role'), 'name:', localStorage.getItem('userName'));
+
         successMessage.style.display = 'block';
-        successMessage.textContent = 'Registration successful! Redirecting...';
+        successMessage.textContent = 'Registration successful! Redirecting to dashboard...';
 
         // Clear form
         form.reset();
 
         // Redirect based on role
         const roleRoutes = {
-          'manager': '/manager-dashboard',
-          'admin': '/admin-dashboard',
-          'procurement': '/procurement-dashboard',
-          'agent': '/agent-dashboard'
+          'manager': 'http://localhost:3000/manager-dashboard',
+          'admin': 'http://localhost:3000/admin-dashboard',
+          'procurement': 'http://localhost:3000/procurement-dashboard',
+          'agent': 'http://localhost:3000/agent-dashboard'
         };
 
-        const redirectUrl = roleRoutes[data.role] || '/manager-dashboard';
+        const redirectUrl = roleRoutes[data.role] || 'http://localhost:3000/manager-dashboard';
+        console.log('Redirecting to:', redirectUrl, 'with role:', data.role);
+        
+        // Redirect immediately
         setTimeout(() => {
+          console.log('Now redirecting to:', redirectUrl);
           window.location.href = redirectUrl;
-        }, 1500);
+        }, 500);
 
       } catch (error) {
         loading.style.display = 'none';
         errorMessage.style.display = 'block';
         errorMessage.textContent = error.message;
-        console.error('Registration error details:', error);
+        console.error('Registration error:', error);
+        console.error('Error stack:', error.stack);
       }
     });
   </script>

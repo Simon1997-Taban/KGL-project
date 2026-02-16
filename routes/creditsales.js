@@ -1,0 +1,190 @@
+const express = require('express');
+const router = express.Router();
+const CreditSale = require('../models/CreditSale');
+const Produce = require('../models/Produce');
+const { verifyToken, populateUser, onlyManagersAndAgents } = require('../middleware/auth');
+const { validateCreditSale } = require('../middleware/validators');
+
+// Record a credit sale (Manager and Agent only)
+router.post('/', verifyToken, populateUser, onlyManagersAndAgents, validateCreditSale, async (req, res) => {
+  try {
+    const { buyerName, nin, location, contact, amountDue, produceName, tonnage, dueDate, branch } = req.body;
+
+    // Find the produce item
+    const produce = await Produce.findOne({ name: produceName, branch });
+
+    if (!produce) {
+      return res.status(404).json({ error: `Produce "${produceName}" not found in your branch` });
+    }
+
+    // Check if stock is available
+    if (produce.stock < tonnage) {
+      return res.status(400).json({ 
+        error: `Insufficient stock. Available: ${produce.stock} tonnes, Requested: ${tonnage} tonnes` 
+      });
+    }
+
+    // Create credit sale record
+    const creditSale = new CreditSale({
+      buyerName,
+      nin,
+      location,
+      contact,
+      amountDue,
+      produce: produce._id,
+      produceName,
+      tonnage,
+      salesAgent: req.user.userId,
+      salesAgentName: req.userData.name,
+      dueDate,
+      dispatchDate: new Date(),
+      branch,
+      status: 'pending'
+    });
+
+    // Reduce stock
+    produce.stock -= tonnage;
+    produce.updatedAt = new Date();
+
+    // Save both records
+    await creditSale.save();
+    await produce.save();
+
+    res.status(201).json({
+      message: 'Credit sale recorded successfully',
+      creditSale,
+      remainingStock: produce.stock
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all credit sales with filters
+router.get('/', verifyToken, async (req, res) => {
+  try {
+    const { branch, status } = req.query;
+    const query = {};
+
+    if (branch && ['branch1', 'branch2'].includes(branch)) {
+      query.branch = branch;
+    }
+
+    if (status && ['pending', 'paid', 'overdue'].includes(status)) {
+      query.status = status;
+    }
+
+    const creditSales = await CreditSale.find(query)
+      .populate('produce', 'name type')
+      .populate('salesAgent', 'name email')
+      .sort({ createdAt: -1 });
+
+    // Calculate totals
+    const totals = {
+      totalPending: creditSales.filter(cs => cs.status === 'pending').reduce((sum, cs) => sum + cs.amountDue, 0),
+      totalOverdue: creditSales.filter(cs => cs.status === 'overdue').reduce((sum, cs) => sum + cs.amountDue, 0),
+      totalDue: creditSales.reduce((sum, cs) => sum + cs.amountDue, 0)
+    };
+
+    res.json({
+      count: creditSales.length,
+      ...totals,
+      creditSales
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get credit sales by agent
+router.get('/agent/:agentId', verifyToken, async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const { branch, status } = req.query;
+
+    const query = { salesAgent: agentId };
+
+    if (branch && ['branch1', 'branch2'].includes(branch)) {
+      query.branch = branch;
+    }
+
+    if (status && ['pending', 'paid', 'overdue'].includes(status)) {
+      query.status = status;
+    }
+
+    const creditSales = await CreditSale.find(query)
+      .populate('produce', 'name type')
+      .populate('salesAgent', 'name email')
+      .sort({ createdAt: -1 });
+
+    const totalDue = creditSales.reduce((sum, cs) => sum + cs.amountDue, 0);
+
+    res.json({
+      count: creditSales.length,
+      totalDue,
+      creditSales
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update credit sale status (Mark as paid/overdue)
+router.put('/:id/status', verifyToken, async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!['pending', 'paid', 'overdue'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const creditSale = await CreditSale.findByIdAndUpdate(
+      req.params.id,
+      { status, updatedAt: new Date() },
+      { new: true }
+    ).populate('produce').populate('salesAgent', 'name email');
+
+    if (!creditSale) {
+      return res.status(404).json({ error: 'Credit sale not found' });
+    }
+
+    res.json({
+      message: `Credit sale marked as ${status}`,
+      creditSale
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get overdue credit sales
+router.get('/alerts/overdue', verifyToken, async (req, res) => {
+  try {
+    const { branch } = req.query;
+    const query = { 
+      status: { $in: ['pending', 'overdue'] },
+      dueDate: { $lt: new Date() }
+    };
+
+    if (branch && ['branch1', 'branch2'].includes(branch)) {
+      query.branch = branch;
+    }
+
+    const overdue = await CreditSale.find(query)
+      .populate('produce', 'name')
+      .populate('salesAgent', 'name email')
+      .sort({ dueDate: 1 });
+
+    const totalOverdue = overdue.reduce((sum, cs) => sum + cs.amountDue, 0);
+
+    res.json({
+      count: overdue.length,
+      totalOverdue,
+      overdue
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;

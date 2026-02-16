@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
 
 // Attempt to load multer for handling file uploads. If it's not installed,
 // fall back to not saving files and continue handling JSON registrations.
@@ -27,18 +27,35 @@ try {
 } catch (e) {
   console.warn('Optional dependency "multer" not found; file upload disabled. Install with: npm install multer');
 }
+
 // Register endpoint
 if (uploadMiddleware) {
   router.post('/register', uploadMiddleware, async (req, res) => {
     try {
       console.log('Register request received (with possible file):', { email: req.body.email, role: req.body.role });
 
-      const { name, email, password, confirmPassword, role } = req.body;
+      const { name, email, password, confirmPassword, role, branch, contact } = req.body;
 
       // Validate required fields
-      if (!name || !email || !password || !confirmPassword || !role) {
+      if (!name || !email || !password || !confirmPassword || !role || !branch || !contact) {
         console.log('Missing required fields');
         return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      // Validate role
+      const validRoles = ['director', 'manager', 'procurement', 'agent'];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ error: `Invalid role. Must be one of: ${validRoles.join(', ')}` });
+      }
+
+      // Validate branch
+      if (!['branch1', 'branch2'].includes(branch)) {
+        return res.status(400).json({ error: 'Branch must be branch1 or branch2' });
+      }
+
+      // Validate contact
+      if (!/^[0-9]{10,15}$/.test(contact)) {
+        return res.status(400).json({ error: 'Contact must be a valid phone number (10-15 digits)' });
       }
 
       // Validate passwords match
@@ -62,7 +79,9 @@ if (uploadMiddleware) {
         name,
         email,
         password: hashedPassword,
-        role
+        role,
+        branch,
+        contact
       };
 
       if (req.file) {
@@ -100,12 +119,28 @@ if (uploadMiddleware) {
     try {
       console.log('Register request received:', { email: req.body.email, role: req.body.role });
       
-      const { name, email, password, confirmPassword, role } = req.body;
+      const { name, email, password, confirmPassword, role, branch, contact } = req.body;
 
       // Validate required fields
-      if (!name || !email || !password || !confirmPassword || !role) {
+      if (!name || !email || !password || !confirmPassword || !role || !branch || !contact) {
         console.log('Missing required fields');
         return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      // Validate role
+      const validRoles = ['director', 'manager', 'procurement', 'agent'];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ error: `Invalid role. Must be one of: ${validRoles.join(', ')}` });
+      }
+
+      // Validate branch
+      if (!['branch1', 'branch2'].includes(branch)) {
+        return res.status(400).json({ error: 'Branch must be branch1 or branch2' });
+      }
+
+      // Validate contact
+      if (!/^[0-9]{10,15}$/.test(contact)) {
+        return res.status(400).json({ error: 'Contact must be a valid phone number (10-15 digits)' });
       }
 
       // Validate passwords match
@@ -129,7 +164,9 @@ if (uploadMiddleware) {
         name, 
         email, 
         password: hashedPassword, 
-        role 
+        role,
+        branch,
+        contact
       });
       
       await user.save();
@@ -155,6 +192,7 @@ if (uploadMiddleware) {
     }
   });
 }
+
 // Login endpoint
 router.post('/login', async (req, res) => {
   try {
@@ -166,7 +204,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -190,7 +228,9 @@ router.post('/login', async (req, res) => {
       role: user.role,
       userId: user._id,
       name: user.name,
-      photo: user.photo
+      photo: user.photo,
+      branch: user.branch,
+      contact: user.contact
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -213,6 +253,8 @@ router.get('/profile/:userId', async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      branch: user.branch,
+      contact: user.contact,
       photo: user.photo
     });
   } catch (error) {

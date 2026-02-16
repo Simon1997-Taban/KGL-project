@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGL_L Application - Complete Code Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #d32f2f;
+            border-bottom: 3px solid #d32f2f;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            color: #1976d2;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 5px solid #1976d2;
+            padding-left: 15px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #388e3c;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        h4 {
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .section {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .explanation {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #388e3c;
+        }
+        
+        .explanation strong {
+            color: #2e7d32;
+        }
+        
+        .file-header {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px 5px 5px 0;
+            font-weight: bold;
+        }
+        
+        .admin { background: #ffebee; color: #c62828; }
+        .manager { background: #f3e5f5; color: #6a1b9a; }
+        .procurement { background: #e3f2fd; color: #1565c0; }
+        .agent { background: #e8f5e9; color: #2e7d32; }
+        
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #388e3c;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table th {
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #721c24;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #155724;
+        }
+        
+        .page-break {
+            page-break-after: always;
+        }
+        
+        .toc {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .toc ol {
+            margin-left: 20px;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .endpoint {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .method-GET {
+            color: #0066cc;
+            font-weight: bold;
+        }
+        
+        .method-POST {
+            color: #00aa00;
+            font-weight: bold;
+        }
+        
+        .method-PUT {
+            color: #ff9900;
+            font-weight: bold;
+        }
+        
+        .method-DELETE {
+            color: #cc0000;
+            font-weight: bold;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .page-break { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title Page -->
+        <h1>🚀 KGL_L APPLICATION</h1>
+        <h2 style="text-align: center; border: none; color: #666; font-size: 1.3em;">Complete Code Documentation</h2>
+        
+        <div style="text-align: center; margin: 40px 0; color: #666;">
+            <p><strong>Agricultural Supply Chain Management System</strong></p>
+            <p>Version: 1.0.0</p>
+            <p>Date: February 2026</p>
+        </div>
+        
+        <div class="section">
+            <h3>📋 Project Overview</h3>
+            <p>The KGL_L application is a comprehensive web-based platform for managing agricultural supply chain operations. It includes user authentication, role-based access control, and dashboard management for different user roles including Admins, Managers, Procurement Officers, and Sales Agents.</p>
+        </div>
+        
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>📑 Table of Contents</h3>
+            <ol>
+                <li>System Architecture</li>
+                <li>Project Dependencies</li>
+                <li>Backend - Server Configuration (server.js)</li>
+                <li>Authentication Routes (routes/auth.js)</li>
+                <li>User Database Model (models/User.js)</li>
+                <li>Frontend - HTML Pages</li>
+                <li>API Endpoints Reference</li>
+                <li>Authentication Flow</li>
+                <li>User Roles & Permissions</li>
+                <li>Setup & Installation</li>
+            </ol>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 1: System Architecture -->
+        <h2>1️⃣ System Architecture</h2>
+        
+        <div class="section">
+            <h3>Architecture Overview</h3>
+            <p>The KGL_L application follows a <strong>Client-Server Architecture</strong>:</p>
+            <ul class="feature-list">
+                <li><strong>Frontend (Client):</strong> HTML5, CSS3, JavaScript (Vanilla JS)</li>
+                <li><strong>Backend (Server):</strong> Node.js with Express.js</li>
+                <li><strong>Database:</strong> MongoDB (NoSQL)</li>
+                <li><strong>Authentication:</strong> JWT (JSON Web Tokens)</li>
+                <li><strong>File Upload:</strong> Multer for handling image uploads</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h3>System Flow Diagram</h3>
+            <pre>
+Client (Browser)
+    ↓
+Frontend Pages (Login/Register/Dashboards)
+    ↓
+HTTP Requests (Fetch API)
+    ↓
+Express Server (Port 3000)
+    ↓
+Authentication Routes
+    ↓
+MongoDB Database
+            </pre>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 2: Dependencies -->
+        <h2>2️⃣ Project Dependencies</h2>
+        
+        <div class="section">
+            <h3>NPM Packages Used</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Version</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>express</strong></td>
+                        <td>^5.2.1</td>
+                        <td>Web framework for creating API endpoints and serving pages</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mongoose</strong></td>
+                        <td>^9.2.0</td>
+                        <td>MongoDB object modeling for database operations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>bcryptjs</strong></td>
+                        <td>^3.0.3</td>
+                        <td>Password hashing for secure user authentication</td>
+                    </tr>
+                    <tr>
+                        <td><strong>jsonwebtoken</strong></td>
+                        <td>^9.0.3</td>
+                        <td>Generate and verify JWT tokens for user sessions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>multer</strong></td>
+                        <td>^2.0.2</td>
+                        <td>Handle file uploads (profile photos)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>cors</strong></td>
+                        <td>^2.8.6</td>
+                        <td>Enable Cross-Origin Resource Sharing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>dotenv</strong></td>
+                        <td>^17.2.4</td>
+                        <td>Load environment variables from .env file</td>
+                    </tr>
+                    <tr>
+                        <td><strong>body-parser</strong></td>
+                        <td>^2.2.2</td>
+                        <td>Parse incoming request bodies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 3: Server Configuration -->
+        <h2>3️⃣ Backend - Server Configuration (server.js)</h2>
+        
+        <div class="file-header">📄 File: server.js</div>
+        
+        <h3>Purpose</h3>
+        <p>The server.js file initializes the Express application, sets up middleware, connects to MongoDB, defines database schemas, and creates API endpoints for managing procurements, sales, and reports.</p>
+        
+        <h3>Key Components</h3>
+        
+        <h4>1. Module Imports</h4>
+        <div class="code-block">const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
+const path = require('path');</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li><code>express</code> - Web framework for handling HTTP requests</li>
+                <li><code>mongoose</code> - Library for connecting to and querying MongoDB</li>
+                <li><code>dotenv</code> - Loads environment variables from .env file (like database URL)</li>
+                <li><code>path</code> - Built-in Node.js module for handling file paths</li>
+            </ul>
+        </div>
+        
+        <h4>2. CORS Configuration</h4>
+        <div class="code-block">let cors;
+try {
+  cors = require('cors');
+} catch (e) {
+  console.warn('cors not found; using fallback');
+  cors = null;
+}
+
+if (cors) {
+  app.use(cors());
+} else {
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') return res.sendStatus(200);
+    next();
+  });
+}</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Attempts to load the CORS package</li>
+                <li>If available, enables CORS for all routes</li>
+                <li>If not available, creates a fallback CORS middleware manually</li>
+                <li>Allows requests from any origin (frontend on different port)</li>
+                <li>Sets allowed HTTP methods and headers</li>
+            </ul>
+        </div>
+        
+        <h4>3. Middleware Setup</h4>
+        <div class="code-block">app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li><code>express.json()</code> - Parses incoming JSON request bodies (max 10MB)</li>
+                <li><code>express.urlencoded()</code> - Parses form data</li>
+                <li><code>express.static()</code> - Serves static files from public directory (CSS, JS, images)</li>
+            </ul>
+        </div>
+        
+        <h4>4. Debug Logging Middleware</h4>
+        <div class="code-block">app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  if (req.path.endsWith('.html') || req.path === '/login' || req.path === '/register') {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  }
+  next();
+});</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Logs every incoming request with timestamp, HTTP method, and path</li>
+                <li>Disables caching for HTML pages to ensure fresh content</li>
+                <li>Prevents browser from caching login/register pages</li>
+            </ul>
+        </div>
+        
+        <h4>5. MongoDB Connection</h4>
+        <div class="code-block">const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl';
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Reads MongoDB connection URL from environment variables</li>
+                <li>Falls back to local MongoDB on port 27017 if not specified</li>
+                <li>Connects to database named 'kgl'</li>
+                <li>Logs success or error message</li>
+            </ul>
+        </div>
+        
+        <h4>6. Route Definition</h4>
+        <div class="code-block">const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
+app.get('/', (req, res) => res.redirect('/login'));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login', 'login.html')));
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'login', 'register.html')));</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Imports authentication routes from separate file</li>
+                <li>Mounts auth routes under /api/auth prefix</li>
+                <li>Root path (/) redirects to /login</li>
+                <li>Serves login and register HTML pages</li>
+            </ul>
+        </div>
+        
+        <h4>7. Database Schemas</h4>
+        <div class="code-block">const produceSchema = new mongoose.Schema({
+  name: String,
+  type: String,
+  tonnage: Number,
+  cost: Number,
+  dealerName: String,
+  branch: String,
+  contact: String,
+  salePrice: Number,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Produce = mongoose.model('Produce', produceSchema);</div>
+        
+        <div class="explanation">
+            <strong>Produce Schema - Represents agricultural products:</strong>
+            <ul>
+                <li><code>name</code> - Product name (e.g., "Maize", "Wheat")</li>
+                <li><code>type</code> - Product category</li>
+                <li><code>tonnage</code> - Quantity in metric tons</li>
+                <li><code>cost</code> - Purchase cost per unit</li>
+                <li><code>dealerName</code> - Name of supplier/dealer</li>
+                <li><code>branch</code> - Branch location</li>
+                <li><code>contact</code> - Dealer contact information</li>
+                <li><code>salePrice</code> - Selling price per unit</li>
+                <li><code>createdAt</code> - Timestamp of entry creation</li>
+            </ul>
+        </div>
+        
+        <h4>8. API Endpoints - Procurement</h4>
+        <div class="code-block">app.post('/api/procurement', (req, res) => {
+  const produce = new Produce(req.body);
+  produce.save((err, produce) => {
+    if (err) res.status(400).json({ error: err.message });
+    else res.status(201).json(produce);
+  });
+});
+
+app.get('/api/procurement', (req, res) => {
+  Produce.find().sort({ createdAt: -1 }).exec((err, produces) => {
+    if (err) res.status(400).json({ error: err.message });
+    else res.json(produces);
+  });
+});</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li><span class="method-POST">POST /api/procurement</span> - Creates a new procurement record</li>
+                <li><span class="method-GET">GET /api/procurement</span> - Retrieves all procurements sorted by newest first</li>
+                <li>Uses Mongoose to save/query data from MongoDB</li>
+                <li>Returns appropriate HTTP status codes (201 for creation, 400 for errors)</li>
+            </ul>
+        </div>
+        
+        <h4>9. Server Startup</h4>
+        <div class="code-block">const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Reads port from environment or uses default 3000</li>
+                <li>Starts HTTP server and listens for incoming requests</li>
+                <li>Logs server startup message</li>
+            </ul>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 4: Authentication Routes -->
+        <h2>4️⃣ Authentication Routes (routes/auth.js)</h2>
+        
+        <div class="file-header">📄 File: routes/auth.js</div>
+        
+        <h3>Purpose</h3>
+        <p>This file handles all user authentication operations: registration, login, file uploads, password hashing, and JWT token generation.</p>
+        
+        <h4>1. Module Setup</h4>
+        <div class="code-block">const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li><code>bcryptjs</code> - Securely hashes passwords before storing</li>
+                <li><code>jsonwebtoken</code> - Creates JWT tokens for session management</li>
+                <li><code>JWT_SECRET</code> - Secret key for signing tokens (should be in .env file)</li>
+            </ul>
+        </div>
+        
+        <h4>2. Multer File Upload Configuration</h4>
+        <div class="code-block">let multer;
+let uploadMiddleware = null;
+try {
+  multer = require('multer');
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads');
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const sanitized = file.originalname.replace(/[^a-zA-Z0-9.\-\_]/g, '_');
+      cb(null, uniqueSuffix + '-' + sanitized);
+    }
+  });
+  const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
+  uploadMiddleware = upload.single('photo');
+} catch (e) {
+  console.warn('Multer not installed; file uploads disabled');
+}</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Configures Multer for handling file uploads</li>
+                <li>Sets upload destination to 'public/uploads' folder</li>
+                <li>Creates unique filenames using timestamp + random number</li>
+                <li>Sanitizes original filenames (removes special characters)</li>
+                <li>Limits file size to 5MB</li>
+                <li>Handles gracefully if Multer is not installed</li>
+            </ul>
+        </div>
+        
+        <h4>3. Register Endpoint (With File Upload)</h4>
+        <div class="code-block">router.post('/register', uploadMiddleware, async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword, role } = req.body;
+
+    // Validation
+    if (!name || !email || !password || !confirmPassword || !role) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+
+    // Check if user exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user object
+    const userData = {
+      name,
+      email,
+      password: hashedPassword,
+      role
+    };
+
+    // Add photo if uploaded
+    if (req.file) {
+      userData.photo = '/uploads/' + req.file.filename;
+    }
+
+    // Save to database
+    const user = new User(userData);
+    await user.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Return success response
+    res.status(201).json({
+      message: 'User registered successfully',
+      token,
+      role: user.role,
+      userId: user._id,
+      name: user.name,
+      photo: user.photo
+    });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});</div>
+        
+        <div class="explanation">
+            <strong>Registration Process Step by Step:</strong>
+            <ol>
+                <li><strong>Extract Data:</strong> Gets name, email, password, role from request</li>
+                <li><strong>Validate:</strong> Checks all required fields are provided</li>
+                <li><strong>Verify Passwords:</strong> Ensures password and confirmPassword match</li>
+                <li><strong>Check Uniqueness:</strong> Queries database to ensure email isn't already registered</li>
+                <li><strong>Hash Password:</strong> Uses bcrypt to securely hash password (10 salt rounds)</li>
+                <li><strong>Handle File:</strong> If user uploaded photo, stores path in userData</li>
+                <li><strong>Save User:</strong> Creates and saves new User document to MongoDB</li>
+                <li><strong>Generate Token:</strong> Creates JWT token valid for 7 days</li>
+                <li><strong>Return Response:</strong> Sends token, user info, and photo URL to frontend</li>
+            </ol>
+        </div>
+        
+        <h4>4. Login Endpoint</h4>
+        <div class="code-block">router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Verify password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Return response
+    res.json({ 
+      message: 'Login successful',
+      token,
+      role: user.role,
+      userId: user._id,
+      name: user.name,
+      photo: user.photo
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});</div>
+        
+        <div class="explanation">
+            <strong>Login Process Step by Step:</strong>
+            <ol>
+                <li><strong>Extract Credentials:</strong> Gets email and password from request</li>
+                <li><strong>Find User:</strong> Queries database for user with this email</li>
+                <li><strong>Verify Password:</strong> Uses bcrypt.compare() to check hashed password</li>
+                <li><strong>Generate Token:</strong> Creates new JWT token</li>
+                <li><strong>Return Data:</strong> Sends token and user info (name, role, photo)</li>
+            </ol>
+        </div>
+        
+        <h4>5. User Profile Endpoint</h4>
+        <div class="code-block">router.get('/profile/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      photo: user.photo
+    });
+  } catch (error) {
+    console.error('Profile error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Retrieves user profile information by user ID</li>
+                <li>Returns user details: name, email, role, photo URL</li>
+                <li>Used by dashboards to fetch user data</li>
+            </ul>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 5: User Model -->
+        <h2>5️⃣ User Database Model (models/User.js)</h2>
+        
+        <div class="file-header">📄 File: models/User.js</div>
+        
+        <h3>Purpose</h3>
+        <p>Defines the MongoDB schema for User documents and enforces data validation rules.</p>
+        
+        <div class="code-block">const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'manager', 'procurement', 'agent'],
+    required: true
+  },
+  photo: {
+    type: String,
+    default: null
+  }
+}, { timestamps: true });
+
+module.exports = mongoose.model('User', userSchema);</div>
+        
+        <div class="explanation">
+            <strong>Schema Fields Explained:</strong>
+            <ul>
+                <li><strong>name</strong> - User's full name (required)</li>
+                <li><strong>email</strong> - User's email address (required, unique - no duplicates)</li>
+                <li><strong>password</strong> - Hashed password (required, never stored as plaintext)</li>
+                <li><strong>role</strong> - User's role (must be one of 4 options: admin, manager, procurement, agent)</li>
+                <li><strong>photo</strong> - URL to profile photo (optional, defaults to null)</li>
+                <li><strong>timestamps: true</strong> - Automatically adds createdAt and updatedAt fields</li>
+            </ul>
+        </div>
+        
+        <div class="success">
+            <strong>Security Note:</strong> The schema enforces that each email is unique, preventing duplicate accounts. Passwords are hashed by bcryptjs before storage.
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 6: Frontend Pages -->
+        <h2>6️⃣ Frontend - HTML Dashboard Pages</h2>
+        
+        <h3>Dashboard Overview</h3>
+        <p>Each user role has a dedicated dashboard with role-specific features and styling.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+            <div class="role-badge admin">👤 Admin Dashboard</div>
+            <div class="role-badge manager">👨‍💼 Manager Dashboard</div>
+            <div class="role-badge procurement">📦 Procurement Dashboard</div>
+            <div class="role-badge agent">🚀 Sales Agent Dashboard</div>
+        </div>
+        
+        <h4>Common Dashboard Features</h4>
+        <ul class="feature-list">
+            <li>Responsive layout with sidebar navigation</li>
+            <li>User profile display with photo</li>
+            <li>Role-based menu items</li>
+            <li>Statistics/metrics cards</li>
+            <li>Data tables and forms</li>
+            <li>Logout functionality</li>
+        </ul>
+        
+        <h4>Frontend Authentication Logic</h4>
+        <div class="code-block">document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'http://localhost:3000/login';
+      return;
+    }
+
+    const userName = localStorage.getItem('userName') || 'User';
+    const userPhoto = localStorage.getItem('userPhoto');
+    
+    document.getElementById('userName').textContent = userName;
+    
+    if (userPhoto) {
+      const profileImg = document.getElementById('profileImg');
+      if (profileImg) {
+        profileImg.src = userPhoto;
+        profileImg.style.display = 'block';
+      }
+    }
+  } catch (error) {
+    console.error('Dashboard init error:', error);
+  }
+});</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Waits for page to fully load</li>
+                <li>Checks if user is logged in (token in localStorage)</li>
+                <li>Redirects to login if not authenticated</li>
+                <li>Loads user name and displays it</li>
+                <li>Loads profile photo if available</li>
+                <li>Displays photo in circular image element</li>
+            </ul>
+        </div>
+        
+        <h4>Login Page - Form Submission</h4>
+        <div class="code-block">form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Login failed');
+    }
+
+    // Store auth data
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('role', data.role);
+    localStorage.setItem('userId', data.userId);
+    localStorage.setItem('userName', data.name);
+    if (data.photo) {
+      localStorage.setItem('userPhoto', data.photo);
+    }
+
+    // Redirect based on role
+    const roleRoutes = {
+      'manager': 'http://localhost:3000/manager-dashboard',
+      'admin': 'http://localhost:3000/admin-dashboard',
+      'procurement': 'http://localhost:3000/procurement-dashboard',
+      'agent': 'http://localhost:3000/agent-dashboard'
+    };
+
+    window.location.href = roleRoutes[data.role] || 'http://localhost:3000/manager-dashboard';
+  } catch (error) {
+    errorMessage.textContent = error.message;
+  }
+});</div>
+        
+        <div class="explanation">
+            <strong>Login Flow:</strong>
+            <ol>
+                <li>User clicks login button</li>
+                <li>Form data is sent to backend via fetch API</li>
+                <li>Backend verifies credentials</li>
+                <li>Backend returns token and user data</li>
+                <li>Frontend stores all data in localStorage</li>
+                <li>Frontend redirects to appropriate dashboard based on role</li>
+            </ol>
+        </div>
+        
+        <h4>Logout Functionality</h4>
+        <div class="code-block">function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
+  localStorage.removeItem('userPhoto');
+  window.location.href = 'http://localhost:3000/login';
+}</div>
+        
+        <div class="explanation">
+            <strong>What it does:</strong>
+            <ul>
+                <li>Clears all session data from localStorage</li>
+                <li>Removes token, preventing further authenticated requests</li>
+                <li>Redirects to login page</li>
+            </ul>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 7: API Endpoints -->
+        <h2>7️⃣ Complete API Endpoints Reference</h2>
+        
+        <h3>Authentication Endpoints</h3>
+        
+        <div class="endpoint">
+            <strong class="method-POST">POST</strong> <code>/api/auth/register</code>
+            <p><strong>Purpose:</strong> Register a new user account</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "securePassword123",
+  "confirmPassword": "securePassword123",
+  "role": "admin",
+  "photo": "[File - optional]"
+}</pre>
+            <p><strong>Response (Success):</strong></p>
+            <pre>{
+  "message": "User registered successfully",
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "role": "admin",
+  "userId": "65a4b3c2d1e8f9g0h1i2j3k4",
+  "name": "John Doe",
+  "photo": "/uploads/1234-profile.jpg"
+}</pre>
+            <p><strong>Status Codes:</strong></p>
+            <ul>
+                <li>201 - User created successfully</li>
+                <li>400 - Missing fields or validation error</li>
+                <li>500 - Server error</li>
+            </ul>
+        </div>
+        
+        <div class="endpoint">
+            <strong class="method-POST">POST</strong> <code>/api/auth/login</code>
+            <p><strong>Purpose:</strong> Authenticate user and get session token</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "email": "john@example.com",
+  "password": "securePassword123"
+}</pre>
+            <p><strong>Response (Success):</strong></p>
+            <pre>{
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "role": "admin",
+  "userId": "65a4b3c2d1e8f9g0h1i2j3k4",
+  "name": "John Doe",
+  "photo": "/uploads/1234-profile.jpg"
+}</pre>
+            <p><strong>Status Codes:</strong></p>
+            <ul>
+                <li>200 - Login successful</li>
+                <li>401 - Invalid credentials</li>
+                <li>400 - Missing email or password</li>
+            </ul>
+        </div>
+        
+        <div class="endpoint">
+            <strong class="method-GET">GET</strong> <code>/api/auth/profile/:userId</code>
+            <p><strong>Purpose:</strong> Retrieve user profile information</p>
+            <p><strong>URL Parameter:</strong></p>
+            <pre>userId - MongoDB user ID</pre>
+            <p><strong>Response (Success):</strong></p>
+            <pre>{
+  "userId": "65a4b3c2d1e8f9g0h1i2j3k4",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": "admin",
+  "photo": "/uploads/1234-profile.jpg"
+}</pre>
+            <p><strong>Status Codes:</strong></p>
+            <ul>
+                <li>200 - Profile retrieved</li>
+                <li>404 - User not found</li>
+            </ul>
+        </div>
+        
+        <h3>Procurement Endpoints</h3>
+        
+        <div class="endpoint">
+            <strong class="method-POST">POST</strong> <code>/api/procurement</code>
+            <p><strong>Purpose:</strong> Create new procurement record</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "name": "Maize",
+  "type": "Grain",
+  "tonnage": 500,
+  "cost": 150000,
+  "dealerName": "John Supplies",
+  "branch": "Main",
+  "contact": "0712345678",
+  "salePrice": 200000
+}</pre>
+            <p><strong>Status Codes:</strong> 201 Created, 400 Bad Request</p>
+        </div>
+        
+        <div class="endpoint">
+            <strong class="method-GET">GET</strong> <code>/api/procurement</code>
+            <p><strong>Purpose:</strong> Retrieve all procurement records (newest first)</p>
+            <p><strong>Response:</strong> Array of procurement documents</p>
+            <p><strong>Status Codes:</strong> 200 OK, 400 Error</p>
+        </div>
+        
+        <h3>Sales Endpoints</h3>
+        
+        <div class="endpoint">
+            <strong class="method-POST">POST</strong> <code>/api/sales</code>
+            <p><strong>Purpose:</strong> Record a new sale</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "produceName": "Maize",
+  "tonnage": 100,
+  "amountPaid": 20000000,
+  "buyerName": "ABC Trading",
+  "salesAgentName": "John Doe"
+}</pre>
+            <p><strong>Status Codes:</strong> 201 Created, 400 Bad Request</p>
+        </div>
+        
+        <div class="endpoint">
+            <strong class="method-GET">GET</strong> <code>/api/sales</code>
+            <p><strong>Purpose:</strong> Retrieve all sales records</p>
+            <p><strong>Response:</strong> Array of sale documents</p>
+            <p><strong>Status Codes:</strong> 200 OK, 400 Error</p>
+        </div>
+        
+        <h3>Reports Endpoints</h3>
+        
+        <div class="endpoint">
+            <strong class="method-POST">POST</strong> <code>/api/reports</code>
+            <p><strong>Purpose:</strong> Create a new report</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "reportType": "Monthly Sales",
+  "branch": "Main"
+}</pre>
+            <p><strong>Status Codes:</strong> 201 Created, 400 Bad Request</p>
+        </div>
+        
+        <div class="endpoint">
+            <strong class="method-GET">GET</strong> <code>/api/reports</code>
+            <p><strong>Purpose:</strong> Retrieve all reports</p>
+            <p><strong>Response:</strong> Array of report documents</p>
+            <p><strong>Status Codes:</strong> 200 OK, 400 Error</p>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 8: User Roles -->
+        <h2>8️⃣ User Roles & Permissions</h2>
+        
+        <h3>Role Distribution</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Dashboard URL</th>
+                    <th>Primary Functions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Admin</strong> 👤</td>
+                    <td>/admin-dashboard</td>
+                    <td>System management, user management, activity logs</td>
+                </tr>
+                <tr>
+                    <td><strong>Manager</strong> 👨‍💼</td>
+                    <td>/manager-dashboard</td>
+                    <td>Procurement oversight, stock management, sales tracking, reports</td>
+                </tr>
+                <tr>
+                    <td><strong>Procurement Officer</strong> 📦</td>
+                    <td>/procurement-dashboard</td>
+                    <td>Purchase orders, supplier management, inventory tracking</td>
+                </tr>
+                <tr>
+                    <td><strong>Sales Agent</strong> 🚀</td>
+                    <td>/agent-dashboard</td>
+                    <td>Record sales, view sales history, track targets</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Role-Based Features</h3>
+        
+        <h4>👤 Admin Role</h4>
+        <div class="section">
+            <ul class="feature-list">
+                <li>View total users count</li>
+                <li>Monitor active sessions</li>
+                <li>Check system status</li>
+                <li>Access system settings</li>
+                <li>View activity logs</li>
+                <li>Manage user accounts</li>
+            </ul>
+        </div>
+        
+        <h4>👨‍💼 Manager Role</h4>
+        <div class="section">
+            <ul class="feature-list">
+                <li>View all procurement items</li>
+                <li>Record new procurement</li>
+                <li>Track stock levels</li>
+                <li>Record sales transactions</li>
+                <li>View sales analytics</li>
+                <li>Generate reports</li>
+            </ul>
+        </div>
+        
+        <h4>📦 Procurement Officer Role</h4>
+        <div class="section">
+            <ul class="feature-list">
+                <li>Create purchase orders</li>
+                <li>Manage supplier information</li>
+                <li>Track delivery status</li>
+                <li>View procurement history</li>
+            </ul>
+        </div>
+        
+        <h4>🚀 Sales Agent Role</h4>
+        <div class="section">
+            <ul class="feature-list">
+                <li>Record new sales</li>
+                <li>View sales history</li>
+                <li>Track monthly targets</li>
+                <li>View customer information</li>
+            </ul>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 9: Installation & Setup -->
+        <h2>9️⃣ Setup & Installation Guide</h2>
+        
+        <h3>Prerequisites</h3>
+        <ul class="feature-list">
+            <li>Node.js (v14 or higher)</li>
+            <li>MongoDB (local or cloud - MongoDB Atlas)</li>
+            <li>npm (comes with Node.js)</li>
+            <li>A code editor (VSCode recommended)</li>
+        </ul>
+        
+        <h3>Step-by-Step Installation</h3>
+        
+        <h4>1. Clone/Download Project</h4>
+        <div class="code-block">cd ~/Desktop/KGL_L</div>
+        
+        <h4>2. Install Dependencies</h4>
+        <div class="code-block">npm install</div>
+        
+        <div class="explanation">
+            This command will install all packages listed in package.json:
+            <ul>
+                <li>express - Web framework</li>
+                <li>mongoose - MongoDB driver</li>
+                <li>bcryptjs - Password hashing</li>
+                <li>jsonwebtoken - JWT creation</li>
+                <li>multer - File uploads</li>
+                <li>cors - Cross-origin requests</li>
+                <li>dotenv - Environment variables</li>
+            </ul>
+        </div>
+        
+        <h4>3. Create .env File</h4>
+        <div class="code-block">Create file: .env
+Add content:
+  MONGODB_URI=mongodb://localhost:27017/kgl
+  JWT_SECRET=your-secret-key-here
+  PORT=3000</div>
+        
+        <h4>4. Start MongoDB</h4>
+        <div class="code-block">Windows: mongod
+Mac/Linux: brew services start mongodb-community</div>
+        
+        <h4>5. Create Upload Directory</h4>
+        <div class="code-block">Create folder: public/uploads</div>
+        
+        <h4>6. Start Application</h4>
+        <div class="code-block">npm start
+or
+node server.js</div>
+        
+        <h4>7. Access Application</h4>
+        <div class="code-block">Open browser: http://localhost:3000
+Login page: http://localhost:3000/login
+Register page: http://localhost:3000/register</div>
+        
+        <h3>Troubleshooting</h3>
+        
+        <div class="warning">
+            <strong>Issue:</strong> "Cannot find module 'express'"<br>
+            <strong>Solution:</strong> Run <code>npm install</code> to install dependencies
+        </div>
+        
+        <div class="warning">
+            <strong>Issue:</strong> "MongoDB connection error"<br>
+            <strong>Solution:</strong> Make sure MongoDB is running. For Windows, check Services panel. For Mac/Linux, run <code>brew services start mongodb-community</code>
+        </div>
+        
+        <div class="warning">
+            <strong>Issue:</strong> "Port 3000 already in use"<br>
+            <strong>Solution:</strong> Change PORT in .env file or kill process using port 3000
+        </div>
+        
+        <div class="warning">
+            <strong>Issue:</strong> "CORS error" when accessing from different port<br>
+            <strong>Solution:</strong> Ensure redirect URLs use full address: http://localhost:3000/dashboard
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 10: Data Flow -->
+        <h2>🔟 Complete Data Flow Diagrams</h2>
+        
+        <h3>User Registration Flow</h3>
+        <div class="code-block">
+FORM SUBMISSION
+    ↓
+Client validates (passwords match, password length)
+    ↓
+Send POST request to /api/auth/register
+    ↓
+Server receives FormData (with file if photo uploaded)
+    ↓
+Validate all required fields
+    ↓
+Hash password using bcryptjs
+    ↓
+Create User document in MongoDB
+    ↓
+Upload photo to public/uploads folder
+    ↓
+Generate JWT token
+    ↓
+Store in localStorage: token, role, userId, userName, userPhoto
+    ↓
+Redirect to appropriate dashboard
+    ↓
+Dashboard loads user data from localStorage
+        </div>
+        
+        <h3>User Login Flow</h3>
+        <div class="code-block">
+LOGIN FORM SUBMISSION
+    ↓
+Send POST request to /api/auth/login
+    ↓
+Server finds user by email in MongoDB
+    ↓
+Compare submitted password with stored hashed password
+    ↓
+If match, generate JWT token
+    ↓
+Return token, role, userId, userName, photo URL
+    ↓
+Client stores all data in localStorage
+    ↓
+Redirect based on role:
+    - admin → /admin-dashboard
+    - manager → /manager-dashboard
+    - procurement → /procurement-dashboard
+    - agent → /agent-dashboard
+    ↓
+Dashboard DOMContentLoaded event:
+    - Checks for token in localStorage
+    - If no token, redirect to login
+    - If token exists, load user data
+    - Display username and photo
+        </div>
+        
+        <h3>Dashboard Access Control</h3>
+        <div class="code-block">
+USER VISITS DASHBOARD
+    ↓
+DOMContentLoaded event fires
+    ↓
+Check localStorage for token
+    ↓
+Token exists?
+    ├─ NO  → Redirect to login
+    └─ YES → Continue
+    ↓
+Load userName from localStorage
+    ↓
+Load userPhoto from localStorage
+    ↓
+Display username in navbar
+    ↓
+Display profile photo in circular container
+    ↓
+Initialize dashboard features
+        </div>
+        
+        <h3>Logout Flow</h3>
+        <div class="code-block">
+USER CLICKS LOGOUT BUTTON
+    ↓
+Clear localStorage:
+    - token
+    - role
+    - userId
+    - userName
+    - userPhoto
+    ↓
+Redirect to login page
+    ↓
+All session data is erased
+    ↓
+User must login again to access dashboard
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- SECTION 11: Security -->
+        <h2>🔐 Security Measures</h2>
+        
+        <div class="success">
+            <strong>Password Security:</strong>
+            <ul>
+                <li>Passwords are hashed using bcryptjs with 10 salt rounds</li>
+                <li>Never stored as plaintext in database</li>
+                <li>Hashed password compared during login</li>
+            </ul>
+        </div>
+        
+        <div class="success">
+            <strong>Authentication:</strong>
+            <ul>
+                <li>JWT tokens issued after successful login</li>
+                <li>Tokens valid for 7 days</li>
+                <li>Token stored in browser localStorage</li>
+                <li>Token required to access protected dashboards</li>
+            </ul>
+        </div>
+        
+        <div class="success">
+            <strong>Data Validation:</strong>
+            <ul>
+                <li>Email uniqueness enforced at database level</li>
+                <li>Required fields validated before database operations</li>
+                <li>Password confirmation validation on client side</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Security Warnings for Production:</strong>
+            <ul>
+                <li>Use HTTPS instead of HTTP</li>
+                <li>Store JWT_SECRET in secure environment variable</li>
+                <li>Don't expose database credentials in code</li>
+                <li>Implement rate limiting on auth endpoints</li>
+                <li>Use secure session storage instead of localStorage</li>
+                <li>Implement CSRF protection</li>
+                <li>Add input sanitization</li>
+                <li>Enable HTTPS-only cookies</li>
+            </ul>
+        </div>
+        
+        <!-- Summary -->
+        <div class="page-break"></div>
+        
+        <h2>📝 Summary & Key Takeaways</h2>
+        
+        <div class="section">
+            <h3>Architecture Overview</h3>
+            <p>The KGL_L application implements a modern three-tier architecture:</p>
+            <ol>
+                <li><strong>Presentation Layer:</strong> HTML, CSS, JavaScript dashboards</li>
+                <li><strong>Business Logic Layer:</strong> Express.js server with authentication</li>
+                <li><strong>Data Layer:</strong> MongoDB database with user and transaction data</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h3>Key Features</h3>
+            <ul class="feature-list">
+                <li>User registration with profile photo upload</li>
+                <li>Secure login with JWT tokens</li>
+                <li>Role-based access control (4 roles)</li>
+                <li>MongoDB database for persistence</li>
+                <li>RESTful API endpoints</li>
+                <li>Responsive dashboards</li>
+                <li>File upload management</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h3>Authentication Flow (Summary)</h3>
+            <p>
+                Users register with name, email, password, and role. Passwords are securely hashed.
+                After successful login, a JWT token is issued and stored in localStorage.
+                Dashboards check for this token on load—if missing, users are redirected to login.
+                Logout clears all session data from localStorage.
+            </p>
+        </div>
+        
+        <div class="section">
+            <h3>Database Structure</h3>
+            <p>
+                MongoDB stores User documents with fields for authentication (email, hashed password),
+                profile information (name, role, photo URL), and Procurement/Sales/Reports collections
+                for business data.
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p><strong>KGL_L Application Documentation v1.0</strong></p>
+            <p>Created: February 2026 | Last Updated: February 14, 2026</p>
+            <p>This documentation covers all aspects of the KGL_L codebase including backend, frontend, and API structure.</p>
+            <p style="margin-top: 20px; font-size: 0.85em;">
+                For questions or updates, please review the code comments and server console logs during development.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

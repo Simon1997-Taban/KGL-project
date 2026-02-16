@@ -132,8 +132,21 @@
         <option value="manager">Manager</option>
         <option value="procurement">Procurement Officer</option>
         <option value="agent">Sales Agent</option>
-        <option value="admin">Admin</option>
+        <option value="director">Director</option>
       </select>
+      <select name="branch" id="branch" required>
+        <option value="">Select your branch</option>
+        <option value="branch1">Branch 1</option>
+        <option value="branch2">Branch 2</option>
+      </select>
+      <input 
+        type="tel" 
+        name="contact" 
+        id="contact"
+        placeholder="Enter your phone number (10-15 digits)" 
+        pattern="[0-9]{10,15}"
+        required
+      >
       <label for="photo" style="margin-top:8px; display:block; font-weight:normal; color:#333;">Profile Photo (optional)</label>
       <input type="file" id="photo" name="photo" accept="image/*">
       <div class="error" id="errorMessage"></div>
@@ -160,6 +173,8 @@
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       const role = document.getElementById('role').value;
+      const branch = document.getElementById('branch').value;
+      const contact = document.getElementById('contact').value;
 
       // Clear previous messages
       errorMessage.style.display = 'none';
@@ -191,6 +206,8 @@
           formData.append('password', password);
           formData.append('confirmPassword', confirmPassword);
           formData.append('role', role);
+          formData.append('branch', branch);
+          formData.append('contact', contact);
           const photoInput = document.getElementById('photo');
           if (photoInput && photoInput.files && photoInput.files[0]) {
             formData.append('photo', photoInput.files[0]);
@@ -249,7 +266,7 @@
         // Redirect based on role
         const roleRoutes = {
           'manager': 'http://localhost:3000/manager-dashboard',
-          'admin': 'http://localhost:3000/admin-dashboard',
+          'director': 'http://localhost:3000/director-dashboard',
           'procurement': 'http://localhost:3000/procurement-dashboard',
           'agent': 'http://localhost:3000/agent-dashboard'
         };

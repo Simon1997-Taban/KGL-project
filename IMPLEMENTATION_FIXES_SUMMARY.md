@@ -5,6 +5,20 @@
 
 ---
 
+## Author Information
+
+**Name:** Simon Lodongo Taban  
+**Email:** 
+- simonlodongotaban@gmail.com
+- simonlodongotaban@yahoo.com
+- simonlodongotaban@outlook.com
+
+**Phone:** 
+- +256 (0) 789121378
+- +256 (0) 788858064
+
+---
+
 ## Overview of Changes
 
 Your application has been completely refactored to meet all SRD requirements. The implementation is now **~95% compliant** with the Software Requirements Document.

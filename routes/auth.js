@@ -1,3 +1,33 @@
+/**
+ * Authentication Routes
+ * 
+ * Author: Simon Lodongo Taban
+ * Email: simonlodongotaban@gmail.com | simonlodongotaban@yahoo.com
+ * Phone: +256 789121378 | +256 788858064
+ * 
+ * Purpose: Handles user registration, login, and profile management.
+ * Uses JWT tokens for stateless authentication.
+ * Passwords are hashed using bcryptjs before storage.
+ * Validates all input including email, phone numbers, and password strength.
+ * 
+ * Endpoints:
+ * - POST /api/auth/register - Create new user account
+ * - POST /api/auth/login - Authenticate user and receive JWT token
+ * - GET /api/auth/profile/:userId - Retrieve user profile information
+ * 
+ * User Roles Supported:
+ * - director: Full system access and reporting
+ * - manager: Procurement and branch management
+ * - procurement: Can record procurement operations
+ * - agent: Can record sales transactions
+ * 
+ * Required for Registration:
+ * - name, email, password, role, branch, contact
+ * 
+ * Optional:
+ * - photo: User profile picture (file upload)
+ */
+
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');

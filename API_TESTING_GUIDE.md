@@ -4,6 +4,20 @@
 
 ---
 
+## Author Information
+
+**Name:** Simon Lodongo Taban  
+**Email:** 
+- simonlodongotaban@gmail.com
+- simonlodongotaban@yahoo.com
+- simonlodongotaban@outlook.com
+
+**Phone:** 
+- +256 (0) 789121378
+- +256 (0) 788858064
+
+---
+
 ## 🔐 AUTHENTICATION
 
 ### Register User

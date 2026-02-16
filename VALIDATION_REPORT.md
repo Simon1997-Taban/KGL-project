@@ -1,6 +1,22 @@
 # KGL Groceries LTD Management System - Validation Report
+
 **Date:** February 16, 2026  
-**Project Duration:** 6 Weeks  
+**Duration:** 6 Weeks  
+**Technologies:** HTML, CSS, JavaScript, Node.js, MongoDB  
+
+---
+
+## Author Information
+
+**Name:** Simon Lodongo Taban  
+**Email:** 
+- simonlodongotaban@gmail.com
+- simonlodongotaban@yahoo.com
+- simonlodongotaban@outlook.com
+
+**Phone:** 
+- +256 (0) 789121378
+- +256 (0) 788858064
 
 ---
 

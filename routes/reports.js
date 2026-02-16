@@ -1,3 +1,33 @@
+/**
+ * Reports & Analytics Routes
+ * 
+ * Author: Simon Lodongo Taban
+ * Email: simonlodongotaban@gmail.com | simonlodongotaban@yahoo.com
+ * Phone: +256 789121378 | +256 788858064
+ * 
+ * Purpose: Provides comprehensive reporting and analytics endpoints.
+ * Directors can view company-wide reports and aggregated data.
+ * Managers can view branch-specific reports and performance metrics.
+ * Implements aggregation queries for sales summaries and performance tracking.
+ * 
+ * Endpoints:
+ * - GET /api/reports/sales-summary - Company-wide sales aggregation (Directors)
+ * - GET /api/reports/branch-report - Branch sales (Managers & Directors)
+ * - GET /api/reports/inventory - Inventory status and valuation
+ * - GET /api/reports/agent-performance - Agent performance metrics
+ * 
+ * Access Control:
+ * - All endpoints require JWT token (verifyToken)
+ * - sales-summary restricted to directors only
+ * - Other endpoints available to managers and directors
+ * 
+ * Filtering Options:
+ * - branch: Filter by branch1 or branch2
+ * - startDate: Include only transactions from this date
+ * - endDate: Include only transactions up to this date
+ * - status: Filter credit sales by status (pending/paid/overdue)
+ */
+
 const express = require('express');
 const router = express.Router();
 const Sale = require('../models/Sale');

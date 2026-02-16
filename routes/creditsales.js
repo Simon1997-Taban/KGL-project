@@ -1,3 +1,33 @@
+/**
+ * Credit Sales Routes
+ * 
+ * Author: Simon Lodongo Taban
+ * Email: simonlodongotaban@gmail.com | simonlodongotaban@yahoo.com
+ * Phone: +256 789121378 | +256 788858064
+ * 
+ * Purpose: Handles deferred payment (credit) sales transactions.
+ * Completely separate from regular sales for clear financial tracking.
+ * Automatically reduces stock when credit sales are recorded.
+ * Tracks buyer identity, due dates, and payment status.
+ * Provides alerts for overdue payments.
+ * 
+ * Endpoints:
+ * - POST /api/credit-sales - Record new credit sale
+ * - GET /api/credit-sales - Get all credit sales with optional filters
+ * - GET /api/credit-sales/agent/:agentId - Get credit sales by agent
+ * - PUT /api/credit-sales/:id/status - Update payment status
+ * - GET /api/credit-sales/alerts/overdue - Get overdue payment alerts
+ * 
+ * Status Values:
+ * - pending: Awaiting payment, within due date
+ * - paid: Payment received in full
+ * - overdue: Past due date, payment outstanding
+ * 
+ * Access Control:
+ * - All endpoints require JWT token (verifyToken)
+ * - POST/PUT require manager, agent, or director role
+ */
+
 const express = require('express');
 const router = express.Router();
 const CreditSale = require('../models/CreditSale');

@@ -1,3 +1,26 @@
+/**
+ * Sales Routes (Regular Sales)
+ * 
+ * Author: Simon Lodongo Taban
+ * Email: simonlodongotaban@gmail.com | simonlodongotaban@yahoo.com
+ * Phone: +256 789121378 | +256 788858064
+ * 
+ * Purpose: Handles regular (immediate payment) sales transactions.
+ * Automatically reduces stock from Produce inventory when sales are recorded.
+ * Prevents selling items that don't have sufficient stock.
+ * Validates that stock exists before allowing sale.
+ * 
+ * Endpoints:
+ * - POST /api/sales - Record new sale with automatic stock reduction
+ * - GET /api/sales - Get all sales with optional filters
+ * - GET /api/sales/:id - Get specific sale details
+ * - GET /api/sales/agent/:agentId - Get all sales by specific agent
+ * 
+ * Access Control:
+ * - All endpoints require JWT token (verifyToken)
+ * - POST/GET require manager, agent, or director role
+ */
+
 const express = require('express');
 const router = express.Router();
 const Sale = require('../models/Sale');

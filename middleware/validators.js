@@ -76,7 +76,7 @@ const validateProcurement = (req, res, next) => {
     errors.push("Sale price must be a positive number");
 
   // Validate phone number format
-  if (contact && !/^[0-9]{10,15}$/.test(contact))
+  if (contact && !/^[0-9]{10,12}$/.test(contact))
     errors.push("Contact must be a valid phone number (10-15 digits)");
 
   // Return 400 with error messages if validation fails

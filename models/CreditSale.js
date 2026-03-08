@@ -86,7 +86,7 @@ const creditSaleSchema = new mongoose.Schema({
   contact: {
     type: String,
     required: [true, 'Contact is required'],
-    match: [/^[0-9]{10,15}$/, 'Contact must be a valid phone number (10-15 digits)']
+    match: [/^[0-9]{10,12}$/, 'Contact must be a valid phone number (10-15 digits)']
   },
 
   // Total amount buyer owes

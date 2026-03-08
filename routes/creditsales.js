@@ -59,10 +59,10 @@ router.post('/', verifyToken, populateUser, onlyManagersAndAgents, validateCredi
     }
 
     // Find the produce item
-    const produce = await Produce.findOne({ name: produceName, branch });
+    const produce = await Produce.findOne({ name: produceName });
 
     if (!produce) {
-      return res.status(404).json({ error: `Produce "${produceName}" not found in your branch` });
+      return res.status(404).json({ error: `Produce "${produceName}" not found in inventory` });
     }
 
     // Check if stock is available

@@ -40,10 +40,10 @@ router.post('/', verifyToken, populateUser, onlyManagersAndAgents, validateSale,
     }
 
     // Find the produce item
-    const produce = await Produce.findOne({ name: produceName, branch });
+    const produce = await Produce.findOne({ name: produceName });
 
     if (!produce) {
-      return res.status(404).json({ error: `Produce "${produceName}" not found in your branch` });
+      return res.status(404).json({ error: `Produce "${produceName}" not found in inventory` });
     }
 
     // Check if stock is available
@@ -163,8 +163,8 @@ router.get('/customers', verifyToken, onlyManagersAndAgents, async (req, res) =>
     }
 
     const [sales, creditSales] = await Promise.all([
-      Sale.find(query).lean(),
-      CreditSale.find(query).lean()
+      Sale.find(query).populate('salesAgent', 'name').lean(),
+      CreditSale.find(query).populate('salesAgent', 'name').lean()
     ]);
 
     const customers = [
@@ -176,7 +176,8 @@ router.get('/customers', verifyToken, onlyManagersAndAgents, async (req, res) =>
         saleType: 'cash',
         status: 'paid',
         createdAt: s.createdAt,
-        branch: s.branch
+        branch: s.branch,
+        salesAgentName: s.salesAgentName || (s.salesAgent ? s.salesAgent.name : 'System')
       })),
       ...creditSales.map(cs => ({
         buyerName: cs.buyerName,
@@ -189,7 +190,8 @@ router.get('/customers', verifyToken, onlyManagersAndAgents, async (req, res) =>
         nin: cs.nin,
         contact: cs.contact,
         createdAt: cs.createdAt,
-        branch: cs.branch
+        branch: cs.branch,
+        salesAgentName: cs.salesAgentName || (cs.salesAgent ? cs.salesAgent.name : 'System')
       }))
     ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 

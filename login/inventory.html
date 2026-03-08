@@ -121,8 +121,15 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 24px;
-      max-width: 500px;
+      max-width: 600px;
       width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
     .form-group {
       margin-bottom: 16px;
@@ -176,41 +183,49 @@
       <h2 id="modalTitle">Add Procurement</h2>
       <form id="procurementForm">
         <input type="hidden" id="itemId">
-        <div class="form-group">
-          <label>Product Name *</label>
-          <input type="text" id="name" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="name" required>
+          </div>
+          <div class="form-group">
+            <label>Type/Variety *</label>
+            <input type="text" id="type" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Type/Variety *</label>
-          <input type="text" id="type" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock Quantity *</label>
+            <input type="number" id="stock" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Cost Price *</label>
+            <input type="number" id="cost" step="0.01" min="0.01" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Stock Quantity *</label>
-          <input type="number" id="stock" step="0.01" min="0" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sale Price *</label>
+            <input type="number" id="salePrice" step="0.01" min="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Branch *</label>
+            <select id="branch" required>
+              <option value="">Select branch</option>
+              <option value="branch1">Matugga</option>
+              <option value="branch2">Maganjo</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Cost Price *</label>
-          <input type="number" id="cost" step="0.01" min="0.01" required>
-        </div>
-        <div class="form-group">
-          <label>Sale Price *</label>
-          <input type="number" id="salePrice" step="0.01" min="0.01" required>
-        </div>
-        <div class="form-group">
-          <label>Dealer Name *</label>
-          <input type="text" id="dealerName" required>
-        </div>
-        <div class="form-group">
-          <label>Dealer Contact *</label>
-          <input type="tel" id="contact" pattern="[0-9]{10,15}" required>
-        </div>
-        <div class="form-group">
-          <label>Branch *</label>
-          <select id="branch" required>
-            <option value="">Select branch</option>
-            <option value="branch1">Matugga</option>
-            <option value="branch2">Maganjo</option>
-          </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dealer Name *</label>
+            <input type="text" id="dealerName" required>
+          </div>
+          <div class="form-group">
+            <label>Dealer Contact *</label>
+            <input type="tel" id="contact" pattern="[0-9]{10,15}" required>
+          </div>
         </div>
         <div style="display:flex;gap:10px">
           <button type="submit" class="btn" style="flex:1">Save</button>
